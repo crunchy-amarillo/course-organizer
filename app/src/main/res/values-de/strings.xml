@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CourseOrganizer</string>
+    <string name="prompt_username">Benutzername</string>
+    <string name="prompt_password">Passwort</string>
+    <string name="action_sign_in">Anmelden</string>
+    <string name="action_sign_in_short">Anmelden</string>
+    <string name="invalid_username">Ungültiger Benutzername</string>
+    <string name="invalid_password">Passwort fehlt.</string>
+    <string name="login_failed">Login fehlgeschlagen</string>
+    <string name="title_activity_course_list">Kursliste</string>
+    <string name="prompt_course_title">Titel</string>
+    <string name="prompt_course_description">Kurzbeschreibung</string>
+    <string name="action_add_course">Kurs anlegen</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="prompt_course_session">(Plan-) Semester</string>
+    <string name="title_activity_new_course">Neuen Kurs anlegen</string>
+    <string name="invalid_empty">Dies ist eine Pflichtangabe</string>
+    <string name="logout">Abmelden</string>
+</resources>
