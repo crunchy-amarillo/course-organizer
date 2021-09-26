@@ -36,12 +36,38 @@ public class LearningUnitRepository {
         }
     }
 
+    public Result<Void> edit(String title, String description, String workingHours,
+            Integer learningUnitId
+    ) {
+        try {
+            LearningUnit learningUnit = database.learningUnitDao().findById(learningUnitId);
+            learningUnit.title = title;
+            learningUnit.description = description;
+            learningUnit.workingHours = Integer.valueOf(workingHours);
+
+            database.learningUnitDao().update(learningUnit);
+            return new Result.Success<>(true);
+        } catch (Exception e) {
+            return new Result.Error(new IOException("Error on updating learning unit", e));
+        }
+    }
+
+    public Result<LearningUnit> findById(Integer learningUnitId) {
+        try {
+            LearningUnit learningUnit = database.learningUnitDao().findById(learningUnitId);
+            return new Result.Success<LearningUnit>(learningUnit);
+        } catch (Exception e) {
+            return new Result.Error(new IOException("Error while fetching learning unit", e));
+        }
+
+    }
+
     public Result<List<LearningUnit>> findByCourseId(Integer courseId) {
         try {
             List<LearningUnit> learningUnits = database.learningUnitDao().findByCourseId(courseId);
             return new Result.Success<List<LearningUnit>>(learningUnits);
         } catch (Exception e) {
-            return new Result.Error(new IOException("Error while fetching learing units", e));
+            return new Result.Error(new IOException("Error while fetching learning units", e));
         }
     }
 

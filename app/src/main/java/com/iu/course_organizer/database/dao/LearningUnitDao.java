@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.iu.course_organizer.database.model.Course;
 import com.iu.course_organizer.database.model.LearningUnit;
@@ -17,6 +18,9 @@ public interface LearningUnitDao {
 
     @Query("SELECT * FROM learning_unit WHERE uid = :learningUnitId")
     LearningUnit findById(Integer learningUnitId);
+
+    @Update
+    void update(LearningUnit learningUnit);
 
     @Insert
     void insert(LearningUnit learningUnit);

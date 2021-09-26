@@ -1,10 +1,10 @@
-package com.iu.course_organizer.ui.learning_unit.add;
+package com.iu.course_organizer.ui.learning_unit.crud;
 
 import androidx.annotation.Nullable;
 
 import com.iu.course_organizer.common.FormState;
 
-public class AddLearningUnitFormState extends FormState {
+public class LearningUnitFormState extends FormState {
     @Nullable
     private Integer titleError;
 
@@ -14,11 +14,11 @@ public class AddLearningUnitFormState extends FormState {
     @Nullable
     private Integer hoursError;
 
-    public AddLearningUnitFormState(boolean isDataValid) {
+    public LearningUnitFormState(boolean isDataValid) {
         super(isDataValid);
     }
 
-    public AddLearningUnitFormState(@Nullable Integer titleError,
+    public LearningUnitFormState(@Nullable Integer titleError,
             @Nullable Integer descriptionError, @Nullable Integer hoursError
     ) {
         super(false);

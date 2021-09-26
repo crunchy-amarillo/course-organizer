@@ -10,7 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Courseorganizer">
         <activity
-            android:name=".ui.learning_unit.add.AddLearningUnitActivity"
+            android:name=".ui.learning_unit.crud.EditLearningUnitActivity"
+            android:exported="true"
+            android:label="@string/title_activity_edit_learning_unit"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.Courseorganizer.NoActionBar"
+            />
+        <activity
+            android:name=".ui.learning_unit.crud.AddLearningUnitActivity"
             android:exported="true"
             android:label="@string/title_activity_add_learning_unit"
             android:launchMode="singleInstance"

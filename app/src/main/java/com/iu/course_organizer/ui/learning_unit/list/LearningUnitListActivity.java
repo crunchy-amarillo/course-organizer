@@ -15,11 +15,11 @@ import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.RecyclerViewTouchListener;
 import com.iu.course_organizer.common.utils.ActivityExtras;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
-import com.iu.course_organizer.database.model.Course;
 import com.iu.course_organizer.database.model.LearningUnit;
 import com.iu.course_organizer.databinding.ActivityLearningUnitListBinding;
 import com.iu.course_organizer.ui.AppCombatDefaultActivity;
-import com.iu.course_organizer.ui.learning_unit.add.AddLearningUnitActivity;
+import com.iu.course_organizer.ui.learning_unit.crud.AddLearningUnitActivity;
+import com.iu.course_organizer.ui.learning_unit.crud.EditLearningUnitActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,9 +81,10 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
                             public void onClick(View view, int position) {
                                 LearningUnit learningUnit = entryAdapter.getByPosition(position);
                                 Map<String, String> extras = new HashMap<>();
-                                extras.put(ActivityExtras.LEARNING_UNIT_ID, String.valueOf(learningUnit.uid));
-                                // todo: switch to edit mode
-                                //switchActivity(LearningUnitListActivity.class, extras);
+                                extras.put(ActivityExtras.LEARNING_UNIT_ID,
+                                        String.valueOf(learningUnit.uid)
+                                );
+                                switchActivity(EditLearningUnitActivity.class, extras);
                             }
 
                             @Override

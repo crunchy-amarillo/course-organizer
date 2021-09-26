@@ -23,4 +23,7 @@
     <string name="title_activity_add_learning_unit">Add learning unit</string>
     <string name="action_add">Add</string>
     <string name="unit_hours">hours</string>
+    <string name="title_activity_edit_learning_unit">Edit learning unit</string>
+    <string name="action_back">back</string>
+    <string name="action_edit">edit</string>
 </resources>

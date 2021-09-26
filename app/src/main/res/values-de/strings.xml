@@ -23,4 +23,7 @@
     <string name="title_activity_add_learning_unit">Neue Lerneinheit anlegen</string>
     <string name="action_add">Anlegen</string>
     <string name="unit_hours">Stunden</string>
+    <string name="title_activity_edit_learning_unit">Lerneinheit bearbeiten</string>
+    <string name="action_back">Zurück</string>
+    <string name="action_edit">Bearbeiten</string>
 </resources>
