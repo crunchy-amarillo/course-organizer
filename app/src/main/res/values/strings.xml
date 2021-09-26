@@ -11,10 +11,16 @@
     <string name="title_activity_course_list">CourseList</string>
     <string name="prompt_course_title">Title</string>
     <string name="prompt_course_description">Description</string>
-    <string name="action_add_course">Add course</string>
     <string name="action_cancel">Cancel</string>
     <string name="prompt_course_session">session (planned)</string>
-    <string name="title_activity_new_course">Add new course</string>
+    <string name="title_activity_add_course">Add new course</string>
     <string name="invalid_empty">This input must not be empty</string>
     <string name="logout">Logout</string>
+    <string name="title_activity_learning_unit_list">Learning units</string>
+    <string name="prompt_learning_unit_title">Title</string>
+    <string name="prompt_learning_unit_description">Description</string>
+    <string name="prompt_learning_unit_hours">Planned working hours</string>
+    <string name="title_activity_add_learning_unit">Add learning unit</string>
+    <string name="action_add">Add</string>
+    <string name="unit_hours">hours</string>
 </resources>

@@ -21,7 +21,7 @@ import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.utils.SharedPrefValues;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
 import com.iu.course_organizer.databinding.ActivityLoginBinding;
-import com.iu.course_organizer.ui.course_list.CourseListActivity;
+import com.iu.course_organizer.ui.course.list.CourseListActivity;
 
 public class LoginActivity extends AppCompatActivity {
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/divider"
+    android:orientation="vertical"
+    android:showDividers="end">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        android:layout_marginVertical="@dimen/activity_vertical_margin"
+        android:gravity="start"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="fill_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/learningUnitListTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Headline"
+                android:textAppearance="?android:attr/textAppearanceListItem" />
+
+            <TextView
+                android:id="@+id/learningUnitListDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Headline 2"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/muted" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="fill_horizontal"
+            android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/learningUnitListWorkingHours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1/10"
+            android:textAlignment="textEnd"
+            android:textAppearance="?android:attr/textAppearanceListItem"/>
+
+            <TextView
+                android:id="@+id/learningUnitListWorkingHoursLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/unit_hours"
+                android:textAlignment="textEnd"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/muted" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

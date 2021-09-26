@@ -8,17 +8,15 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName="course", foreignKeys = @ForeignKey(entity = User.class,
-        parentColumns = "uid",
-        childColumns = "user",
-        onUpdate = CASCADE,
-        onDelete = CASCADE))
-public class Course {
-    public Course(@NonNull String title, @NonNull String description, @NonNull Integer session, @NonNull Integer user) {
+@Entity(tableName = "learning_unit", foreignKeys = @ForeignKey(entity = Course.class, parentColumns = "uid", childColumns = "course", onUpdate = CASCADE, onDelete = CASCADE))
+public class LearningUnit {
+    public LearningUnit(@NonNull String title, @NonNull String description,
+            @NonNull Integer workingHours, @NonNull Integer course
+    ) {
         this.title = title;
         this.description = description;
-        this.session = session;
-        this.user = user;
+        this.workingHours = workingHours;
+        this.course = course;
     }
 
     @NonNull
@@ -34,10 +32,10 @@ public class Course {
     public String description;
 
     @NonNull
-    @ColumnInfo(name = "session")
-    public Integer session;
+    @ColumnInfo(name = "working_hours")
+    public Integer workingHours;
 
     @NonNull
-    @ColumnInfo(name = "user")
-    public Integer user;
+    @ColumnInfo(name = "course")
+    public Integer course;
 }

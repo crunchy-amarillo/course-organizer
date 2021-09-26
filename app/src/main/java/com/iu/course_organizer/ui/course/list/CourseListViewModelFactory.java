@@ -1,4 +1,4 @@
-package com.iu.course_organizer.ui.course_list;
+package com.iu.course_organizer.ui.course.list;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.iu.course_organizer.data.CourseRepository;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
-import com.iu.course_organizer.ui.new_course.NewCourseViewModel;
 
 public class CourseListViewModelFactory implements ViewModelProvider.Factory {
     private CourseOrganizerDatabase database;

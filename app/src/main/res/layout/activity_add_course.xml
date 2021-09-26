@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.new_course.NewCourseActivity">
+    tools:context=".ui.course.add.AddCourseActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -19,6 +19,6 @@
 
     <include
         android:id="@+id/includedForm"
-        layout="@layout/content_new_course" />
+        layout="@layout/content_add_course" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

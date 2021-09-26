@@ -1,8 +1,6 @@
-package com.iu.course_organizer.ui.course_list;
+package com.iu.course_organizer.ui.course.list;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -15,15 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.iu.course_organizer.R;
+import com.iu.course_organizer.common.RecyclerViewTouchListener;
+import com.iu.course_organizer.common.utils.ActivityExtras;
 import com.iu.course_organizer.common.utils.SharedPrefValues;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
 import com.iu.course_organizer.database.model.Course;
 import com.iu.course_organizer.databinding.ActivityCourseListBinding;
 import com.iu.course_organizer.ui.AppCombatDefaultActivity;
-import com.iu.course_organizer.ui.new_course.NewCourseActivity;
+import com.iu.course_organizer.ui.course.add.AddCourseActivity;
+import com.iu.course_organizer.ui.learning_unit.list.LearningUnitListActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CourseListActivity extends AppCombatDefaultActivity {
 
@@ -49,6 +52,7 @@ public class CourseListActivity extends AppCombatDefaultActivity {
         observeCourseList();
         observeDeleteResult();
         handleNewButton();
+        handleOnItemClick();
         handleDeleteGesture();
     }
 
@@ -59,10 +63,29 @@ public class CourseListActivity extends AppCombatDefaultActivity {
     }
 
     private void handleNewButton() {
-        binding.fab.setOnClickListener(view -> {
-            Intent intent = new Intent(this, NewCourseActivity.class);
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        binding.btnAddCourse.setOnClickListener(view -> {
+            switchActivity(AddCourseActivity.class);
         });
+    }
+
+    private void handleOnItemClick() {
+        recyclerView.addOnItemTouchListener(
+                new RecyclerViewTouchListener(getApplicationContext(), recyclerView,
+                        new RecyclerViewTouchListener.ClickListener() {
+                            @Override
+                            public void onClick(View view, int position) {
+                                Course course = entryAdapter.getByPosition(position);
+                                Map<String, String> extras = new HashMap<>();
+                                extras.put(ActivityExtras.COURSE_ID, String.valueOf(course.uid));
+                                switchActivity(LearningUnitListActivity.class, extras);
+                            }
+
+                            @Override
+                            public void onLongClick(View view, int position) {
+                                // implement long click if necessary
+                            }
+                        }
+                ));
     }
 
     private void handleDeleteGesture() {

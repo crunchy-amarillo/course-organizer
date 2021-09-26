@@ -1,4 +1,4 @@
-package com.iu.course_organizer.ui.new_course;
+package com.iu.course_organizer.ui.course.add;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -12,16 +12,16 @@ import com.iu.course_organizer.data.CourseRepository;
 import com.iu.course_organizer.data.Result;
 
 
-public class NewCourseViewModel extends ViewModel {
-    private MutableLiveData<NewCourseFormState> formState = new MutableLiveData<>();
-    private MutableLiveData<DefaultResult<Boolean>> addResult = new MutableLiveData<>();
-    private CourseRepository courseRepository;
+public class AddCourseViewModel extends ViewModel {
+    private final MutableLiveData<AddCourseFormState> formState = new MutableLiveData<>();
+    private final MutableLiveData<DefaultResult<Boolean>> addResult = new MutableLiveData<>();
+    private final CourseRepository courseRepository;
 
-    public NewCourseViewModel(@NonNull CourseRepository courseRepository) {
+    public AddCourseViewModel(@NonNull CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
 
-    LiveData<NewCourseFormState> getFormState() {
+    LiveData<AddCourseFormState> getFormState() {
         return formState;
     }
 
@@ -29,9 +29,12 @@ public class NewCourseViewModel extends ViewModel {
         return addResult;
     }
 
-    public void add(String courseTitle, String courseDescription, String courseSession, Integer userId) {
+    public void add(String courseTitle, String courseDescription, String courseSession,
+            Integer userId
+    ) {
         Thread thread = new Thread(() -> {
-            Result<Void> result = courseRepository.add(courseTitle, courseDescription, courseSession, userId);
+            Result<Void> result =
+                    courseRepository.add(courseTitle, courseDescription, courseSession, userId);
             if (result instanceof Result.Success) {
                 addResult.postValue(new DefaultResult<>(true));
             } else {
@@ -43,11 +46,11 @@ public class NewCourseViewModel extends ViewModel {
 
     public void dataChanged(String courseTitle, String courseDescription, String courseSession) {
         if (!StringUtils.isNotEmpty(courseTitle)) {
-            formState.setValue(new NewCourseFormState(R.string.invalid_empty, null, null));
+            formState.setValue(new AddCourseFormState(R.string.invalid_empty, null, null));
         } else if (!StringUtils.isNotEmpty(courseSession)) {
-            formState.setValue(new NewCourseFormState(null, null, R.string.invalid_empty));
+            formState.setValue(new AddCourseFormState(null, null, R.string.invalid_empty));
         } else {
-            formState.setValue(new NewCourseFormState(true));
+            formState.setValue(new AddCourseFormState(true));
         }
     }
 }

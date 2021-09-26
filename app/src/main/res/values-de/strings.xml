@@ -11,10 +11,16 @@
     <string name="title_activity_course_list">Kursliste</string>
     <string name="prompt_course_title">Titel</string>
     <string name="prompt_course_description">Kurzbeschreibung</string>
-    <string name="action_add_course">Kurs anlegen</string>
     <string name="action_cancel">Abbrechen</string>
     <string name="prompt_course_session">(Plan-) Semester</string>
-    <string name="title_activity_new_course">Neuen Kurs anlegen</string>
+    <string name="title_activity_add_course">Neuen Kurs anlegen</string>
     <string name="invalid_empty">Dies ist eine Pflichtangabe</string>
     <string name="logout">Abmelden</string>
+    <string name="title_activity_learning_unit_list">Lerneinheiten</string>
+    <string name="prompt_learning_unit_title">Titel</string>
+    <string name="prompt_learning_unit_description">Beschreibung</string>
+    <string name="prompt_learning_unit_hours">Arbeitsstunden</string>
+    <string name="title_activity_add_learning_unit">Neue Lerneinheit anlegen</string>
+    <string name="action_add">Anlegen</string>
+    <string name="unit_hours">Stunden</string>
 </resources>

@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(tableName = "user")
 public class User {
     public User(@NonNull String username, String firstname, String lastname, @NonNull String password) {
         this.username = username;

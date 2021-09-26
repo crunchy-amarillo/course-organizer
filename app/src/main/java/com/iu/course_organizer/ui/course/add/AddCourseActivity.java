@@ -1,8 +1,6 @@
-package com.iu.course_organizer.ui.new_course;
+package com.iu.course_organizer.ui.course.add;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,29 +13,29 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.snackbar.Snackbar;
 import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.utils.SharedPrefValues;
-import com.iu.course_organizer.data.LoginRepository;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
-import com.iu.course_organizer.databinding.ActivityNewCourseBinding;
-import com.iu.course_organizer.databinding.ContentNewCourseBinding;
+import com.iu.course_organizer.databinding.ActivityAddCourseBinding;
+import com.iu.course_organizer.databinding.ContentAddCourseBinding;
 import com.iu.course_organizer.ui.AppCombatDefaultActivity;
-import com.iu.course_organizer.ui.course_list.CourseListActivity;
+import com.iu.course_organizer.ui.course.list.CourseListActivity;
 
-public class NewCourseActivity extends AppCombatDefaultActivity {
+public class AddCourseActivity extends AppCombatDefaultActivity {
 
-    private NewCourseViewModel viewModel;
-    private ActivityNewCourseBinding binding;
+    private AddCourseViewModel viewModel;
+    private ActivityAddCourseBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityNewCourseBinding.inflate(getLayoutInflater());
+        binding = ActivityAddCourseBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbarWrapper.toolbar);
 
-        viewModel = new ViewModelProvider(this, new NewCourseViewModelFactory(CourseOrganizerDatabase.getInstance(this)))
-                .get(NewCourseViewModel.class);
+        viewModel = new ViewModelProvider(this,
+                new AddCourseViewModelFactory(CourseOrganizerDatabase.getInstance(this))
+        ).get(AddCourseViewModel.class);
 
         observeFormInputs();
         observeAddResult();
@@ -53,24 +51,25 @@ public class NewCourseActivity extends AppCombatDefaultActivity {
     }
 
     private void handleSubmitButton() {
-        ContentNewCourseBinding form = binding.includedForm;
-        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefValues.USER_DETAILS, MODE_PRIVATE);
+        ContentAddCourseBinding form = binding.includedForm;
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(SharedPrefValues.USER_DETAILS, MODE_PRIVATE);
         int userId = sharedPreferences.getInt(SharedPrefValues.USER_ID, -1);
 
         form.btnAddCourse.setOnClickListener(v -> {
             form.loading.setVisibility(View.VISIBLE);
             viewModel.add(form.courseTitle.getText().toString(),
                     form.courseDescription.getText().toString(),
-                    form.courseSession.getText().toString(), userId);
+                    form.courseSession.getText().toString(), userId
+            );
         });
     }
 
     private void handleCancelButton() {
-        ContentNewCourseBinding form = binding.includedForm;
+        ContentAddCourseBinding form = binding.includedForm;
         form.btnCancelAddCourse.setOnClickListener(v -> {
             form.loading.setVisibility(View.VISIBLE);
-            Intent intent = new Intent(this, CourseListActivity.class);
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            switchActivity(CourseListActivity.class);
         });
     }
 
@@ -92,7 +91,10 @@ public class NewCourseActivity extends AppCombatDefaultActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                viewModel.dataChanged(courseTitleInput.getText().toString(), courseDescriptionInput.getText().toString(), courseSessionInput.getText().toString());
+                viewModel.dataChanged(courseTitleInput.getText().toString(),
+                        courseDescriptionInput.getText().toString(),
+                        courseSessionInput.getText().toString()
+                );
             }
         };
         courseTitleInput.addTextChangedListener(afterTextChangedListener);
@@ -106,7 +108,7 @@ public class NewCourseActivity extends AppCombatDefaultActivity {
                 return;
             }
 
-            ContentNewCourseBinding form = binding.includedForm;
+            ContentAddCourseBinding form = binding.includedForm;
             form.btnAddCourse.setEnabled(formState.isDataValid());
 
             if (null != formState.getCourseTitleError()) {
@@ -121,15 +123,16 @@ public class NewCourseActivity extends AppCombatDefaultActivity {
         });
     }
 
-    private void observeAddResult()
-    {
+    private void observeAddResult() {
         viewModel.getResult().observe(this, result -> {
             if (result == null) {
                 return;
             }
             binding.includedForm.loading.setVisibility(View.GONE);
             if (result.getError() != null) {
-                Snackbar.make(findViewById(R.id.btnAddCourse), result.getError(), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.btnAddCourse), result.getError(),
+                        Snackbar.LENGTH_LONG
+                ).show();
             }
             if (result.getSuccess() != null) {
                 setResult(Activity.RESULT_OK);

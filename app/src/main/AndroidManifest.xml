@@ -10,13 +10,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Courseorganizer">
         <activity
-            android:name=".ui.new_course.NewCourseActivity"
+            android:name=".ui.learning_unit.add.AddLearningUnitActivity"
             android:exported="true"
-            android:label="@string/title_activity_new_course"
+            android:label="@string/title_activity_add_learning_unit"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.Courseorganizer.NoActionBar" />
         <activity
-            android:name=".ui.course_list.CourseListActivity"
+            android:name=".ui.learning_unit.list.LearningUnitListActivity"
+            android:exported="true"
+            android:label="@string/title_activity_learning_unit_list"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.Courseorganizer.NoActionBar" />
+        <activity
+            android:name=".ui.course.add.AddCourseActivity"
+            android:exported="true"
+            android:label="@string/title_activity_add_course"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.Courseorganizer.NoActionBar" />
+        <activity
+            android:name=".ui.course.list.CourseListActivity"
             android:exported="true"
             android:label="@string/title_activity_course_list"
             android:launchMode="singleInstance"

@@ -1,4 +1,4 @@
-package com.iu.course_organizer.ui.course_list;
+package com.iu.course_organizer.ui.course.list;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourseListViewModel extends ViewModel {
-    private MutableLiveData<DefaultResult<List<Course>>> courses = new MutableLiveData<>();
-    private MutableLiveData<DefaultResult<Boolean>> deleteResult = new MutableLiveData<>();
-    private CourseRepository courseRepository;
+    private final MutableLiveData<DefaultResult<List<Course>>> courses = new MutableLiveData<>();
+    private final MutableLiveData<DefaultResult<Boolean>> deleteResult = new MutableLiveData<>();
+    private final CourseRepository courseRepository;
 
     public CourseListViewModel(@NonNull CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
