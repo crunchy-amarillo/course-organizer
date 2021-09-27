@@ -19,7 +19,7 @@
     <string name="title_activity_learning_unit_list">Lerneinheiten</string>
     <string name="prompt_learning_unit_title">Titel</string>
     <string name="prompt_learning_unit_description">Beschreibung</string>
-    <string name="prompt_learning_unit_hours">Arbeitsstunden</string>
+    <string name="prompt_learning_unit_hours">Geplante Arbeitsstunden</string>
     <string name="title_activity_add_learning_unit">Neue Lerneinheit anlegen</string>
     <string name="action_add">Anlegen</string>
     <string name="unit_hours">Stunden</string>
@@ -30,4 +30,5 @@
     <string name="stop_recording">Stoppe Uhrzeit</string>
     <string name="finished_recording">Die Uhrzeit wurde gestoppt und die Lerneinheit aktualisiert.</string>
     <string name="progress">Fortschritt</string>
+    <string name="time_spent">Bisheriger Zeitaufwand (min)</string>
 </resources>

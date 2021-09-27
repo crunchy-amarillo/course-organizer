@@ -11,8 +11,7 @@
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/activity_horizontal_margin"
-        android:paddingVertical="@dimen/activity_vertical_margin"
-        android:showDividers="middle">
+        android:paddingVertical="@dimen/activity_vertical_margin">
 
         <TextView
             android:layout_width="match_parent"
@@ -27,17 +26,16 @@
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:progress="0" />
 
-        <View
+        <TextView
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:divider="@drawable/divider" />
+            android:layout_height="wrap_content"
+            android:text="@string/prompt_learning_unit_title" />
 
         <EditText
             android:id="@+id/learningUnitTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:autofillHints="@string/prompt_learning_unit_title"
             android:hint="@string/prompt_learning_unit_title"
             android:inputType="text"
@@ -47,11 +45,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/prompt_learning_unit_description" />
+
         <EditText
             android:id="@+id/learningUnitDescription"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:autofillHints="@string/prompt_learning_unit_description"
             android:hint="@string/prompt_learning_unit_description"
             android:inputType="textMultiLine"
@@ -61,11 +64,16 @@
             app:layout_constraintTop_toBottomOf="@+id/learningUnitTitle"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/prompt_learning_unit_hours" />
+
         <EditText
             android:id="@+id/learningUnitHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:autofillHints="@string/prompt_learning_unit_hours"
             android:hint="@string/prompt_learning_unit_hours"
             android:inputType="number"
@@ -73,6 +81,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/learningUnitDescription"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/time_spent" />
+
+        <EditText
+            android:id="@+id/learningUnitSpentMinutes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/time_spent"
+            android:hint="@string/time_spent"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/learningUnitHours"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout

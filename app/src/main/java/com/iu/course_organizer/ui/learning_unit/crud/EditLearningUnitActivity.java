@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 
 import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.utils.ActivityExtras;
+import com.iu.course_organizer.common.utils.StringUtils;
 import com.iu.course_organizer.databinding.ActivityEditLearningUnitBinding;
 import com.iu.course_organizer.databinding.ContentEditLearningUnitBinding;
 
@@ -48,13 +49,17 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
             ContentEditLearningUnitBinding form = binding.includedForm;
             if (null != learningUnit.getSuccess()) {
                 Integer workingHours = learningUnit.getSuccess().workingHours;
+                Integer spentMinutes = learningUnit.getSuccess().spentMinutes;
+                if (null == spentMinutes) {
+                    spentMinutes = 0;
+                }
 
                 form.learningUnitTitle.setText(learningUnit.getSuccess().title);
                 form.learningUnitDescription.setText(learningUnit.getSuccess().description);
                 form.learningUnitHours.setText(workingHours.toString());
+                form.learningUnitSpentMinutes.setText(spentMinutes.toString());
 
-                Integer spentMinutes = learningUnit.getSuccess().spentMinutes;
-                if (null != spentMinutes && 0 < spentMinutes) {
+                if (0 < spentMinutes) {
                     int progressPercentage =
                             Math.round(spentMinutes * 100 / ((float) workingHours * 60));
                     ProgressBar progressBar = findViewById(R.id.progressBar);
@@ -72,9 +77,17 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
 
         form.btnEditLearningUnit.setOnClickListener(v -> {
             form.loading.setVisibility(View.VISIBLE);
+            String spentMinutesStr = form.learningUnitSpentMinutes.getText().toString();
+            Integer spentMinutes =
+                    StringUtils.isNotEmpty(spentMinutesStr) ? Integer.parseInt(spentMinutesStr) : 0;
+
+            String workingHoursStr = form.learningUnitHours.getText().toString();
+            Integer workingHours =
+                    StringUtils.isNotEmpty(workingHoursStr) ? Integer.parseInt(workingHoursStr) : 0;
+
             viewModel.edit(form.learningUnitTitle.getText().toString(),
-                    form.learningUnitDescription.getText().toString(),
-                    form.learningUnitHours.getText().toString(), Integer.valueOf(learningUnitId)
+                    form.learningUnitDescription.getText().toString(), workingHours, spentMinutes,
+                    Integer.valueOf(learningUnitId)
             );
         });
     }

@@ -36,14 +36,15 @@ public class LearningUnitRepository {
         }
     }
 
-    public Result<Void> edit(String title, String description, String workingHours,
+    public Result<Void> edit(String title, String description, Integer workingHours, Integer spentMinutes,
             Integer learningUnitId
     ) {
         try {
             LearningUnit learningUnit = database.learningUnitDao().findById(learningUnitId);
             learningUnit.title = title;
             learningUnit.description = description;
-            learningUnit.workingHours = Integer.valueOf(workingHours);
+            learningUnit.workingHours = workingHours;
+            learningUnit.spentMinutes = spentMinutes;
 
             database.learningUnitDao().update(learningUnit);
             return new Result.Success<>(true);

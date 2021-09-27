@@ -47,11 +47,11 @@ public class LearningUnitViewModel extends ViewModel {
         thread.start();
     }
 
-    public void edit(String title, String description, String workingHours, Integer learningUnitId
+    public void edit(String title, String description, Integer workingHours, Integer spentMinutes, Integer learningUnitId
     ) {
         Thread thread = new Thread(() -> {
             Result<Void> result =
-                    learningUnitRepository.edit(title, description, workingHours, learningUnitId);
+                    learningUnitRepository.edit(title, description, workingHours, spentMinutes, learningUnitId);
             if (result instanceof Result.Success) {
                 submitResult.postValue(new DefaultResult<>(true));
             } else {
