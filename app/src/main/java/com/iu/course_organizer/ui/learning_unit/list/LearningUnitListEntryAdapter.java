@@ -111,19 +111,21 @@ public class LearningUnitListEntryAdapter
 
         viewHolder.getDescription().setText(learningUnits.get(position).description);
         viewHolder.getTitle().setText(learningUnits.get(position).title);
+
         Integer spentMinutes = learningUnits.get(position).spentMinutes;
+        Integer workingHours = learningUnits.get(position).workingHours;
 
-        float progressHours = 0;
         int progressPercentage = 0;
+        int hours = 0;
+        int minutes = 0;
         if (null != spentMinutes && 0 < spentMinutes) {
-            progressHours = (float) Math.round((float) spentMinutes / 60 * 100) / 100;
-            progressPercentage =
-                    Math.round(progressHours * 100 / learningUnits.get(position).workingHours);
+            minutes = spentMinutes % 60;
+            hours = (int) Math.floor((float) spentMinutes / 60);
+            progressPercentage = Math.round(spentMinutes * 100 / ((float) workingHours * 60));
         }
+        String spentTime = hours + "h " + minutes + "m";
 
-        viewHolder.getWorkingHours()
-                  .setText(progressHours + " / " +
-                          learningUnits.get(position).workingHours.toString());
+        viewHolder.getWorkingHours().setText(spentTime + " / " + workingHours.toString() + "h");
 
         viewHolder.progressBar.setProgress(progressPercentage);
     }

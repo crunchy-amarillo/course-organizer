@@ -55,8 +55,8 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
 
                 Integer spentMinutes = learningUnit.getSuccess().spentMinutes;
                 if (null != spentMinutes && 0 < spentMinutes) {
-                    float progressHours = (float) Math.round((float) spentMinutes / 60 * 100) / 100;
-                    int progressPercentage = Math.round(progressHours * 100 / workingHours);
+                    int progressPercentage =
+                            Math.round(spentMinutes * 100 / ((float) workingHours * 60));
                     ProgressBar progressBar = findViewById(R.id.progressBar);
                     progressBar.setProgress(progressPercentage);
                 }
