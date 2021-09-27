@@ -29,4 +29,5 @@
     <string name="start_recording">Start recording</string>
     <string name="stop_recording">Stop recording</string>
     <string name="finished_recording">Finished recording and updated learning unit</string>
+    <string name="progress">Progress</string>
 </resources>

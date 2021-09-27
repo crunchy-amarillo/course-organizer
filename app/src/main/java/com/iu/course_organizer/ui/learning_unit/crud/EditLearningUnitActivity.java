@@ -47,9 +47,19 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
             }
             ContentEditLearningUnitBinding form = binding.includedForm;
             if (null != learningUnit.getSuccess()) {
+                Integer workingHours = learningUnit.getSuccess().workingHours;
+
                 form.learningUnitTitle.setText(learningUnit.getSuccess().title);
                 form.learningUnitDescription.setText(learningUnit.getSuccess().description);
-                form.learningUnitHours.setText(learningUnit.getSuccess().workingHours.toString());
+                form.learningUnitHours.setText(workingHours.toString());
+
+                Integer spentMinutes = learningUnit.getSuccess().spentMinutes;
+                if (null != spentMinutes && 0 < spentMinutes) {
+                    float progressHours = (float) Math.round((float) spentMinutes / 60 * 100) / 100;
+                    int progressPercentage = Math.round(progressHours * 100 / workingHours);
+                    ProgressBar progressBar = findViewById(R.id.progressBar);
+                    progressBar.setProgress(progressPercentage);
+                }
             }
         });
     }

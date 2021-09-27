@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ public class LearningUnitListEntryAdapter
         private final TextView title;
         private final TextView description;
         private final TextView workingHours;
+        private final ProgressBar progressBar;
         private final Button btnStart;
         private final Button btnStop;
 
@@ -36,6 +38,7 @@ public class LearningUnitListEntryAdapter
             title = view.findViewById(R.id.learningUnitListTitle);
             description = view.findViewById(R.id.learningUnitListDescription);
             workingHours = view.findViewById(R.id.learningUnitListWorkingHours);
+            progressBar = view.findViewById(R.id.progressBar);
 
             btnStart = view.findViewById(R.id.btnStartTimeTracking);
             btnStop = view.findViewById(R.id.btnStopTimeTracking);
@@ -51,6 +54,10 @@ public class LearningUnitListEntryAdapter
 
         public TextView getWorkingHours() {
             return workingHours;
+        }
+
+        public ProgressBar getProgressBar() {
+            return progressBar;
         }
     }
 
@@ -106,11 +113,19 @@ public class LearningUnitListEntryAdapter
         viewHolder.getTitle().setText(learningUnits.get(position).title);
         Integer spentMinutes = learningUnits.get(position).spentMinutes;
 
+        float progressHours = 0;
+        int progressPercentage = 0;
+        if (null != spentMinutes && 0 < spentMinutes) {
+            progressHours = (float) Math.round((float) spentMinutes / 60 * 100) / 100;
+            progressPercentage =
+                    Math.round(progressHours * 100 / learningUnits.get(position).workingHours);
+        }
+
         viewHolder.getWorkingHours()
-                  .setText((null == spentMinutes || 0 == spentMinutes ?
-                          "0" :
-                          ((float) Math.round((float) spentMinutes / 60 * 100) / 100)
-                  ) + " / " + learningUnits.get(position).workingHours.toString());
+                  .setText(progressHours + " / " +
+                          learningUnits.get(position).workingHours.toString());
+
+        viewHolder.progressBar.setProgress(progressPercentage);
     }
 
     public LearningUnit getByPosition(int position) {
