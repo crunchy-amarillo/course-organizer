@@ -26,4 +26,7 @@
     <string name="title_activity_edit_learning_unit">Lerneinheit bearbeiten</string>
     <string name="action_back">Zurück</string>
     <string name="action_edit">Bearbeiten</string>
+    <string name="start_recording">Starte Uhrzeit</string>
+    <string name="stop_recording">Stoppe Uhrzeit</string>
+    <string name="finished_recording">Die Uhrzeit wurde gestoppt und die Lerneinheit aktualisiert.</string>
 </resources>

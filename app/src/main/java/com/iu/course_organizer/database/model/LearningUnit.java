@@ -3,6 +3,7 @@ package com.iu.course_organizer.database.model;
 import static androidx.room.ForeignKey.CASCADE;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -34,6 +35,10 @@ public class LearningUnit {
     @NonNull
     @ColumnInfo(name = "working_hours")
     public Integer workingHours;
+
+    @Nullable
+    @ColumnInfo(name = "spent_minutes")
+    public Integer spentMinutes;
 
     @NonNull
     @ColumnInfo(name = "course")

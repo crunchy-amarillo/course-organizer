@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.iu.course_organizer.R;
-import com.iu.course_organizer.common.RecyclerViewTouchListener;
+import com.iu.course_organizer.common.Timer;
 import com.iu.course_organizer.common.utils.ActivityExtras;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
 import com.iu.course_organizer.database.model.LearningUnit;
@@ -49,11 +48,16 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
 
         initLearningUnitListAdapter();
         loadLearningUnits();
-        observeLearningUnitList();
-        observeDeleteResult();
+
         handleNewButton();
         handleOnItemClick();
+        handleOnStartButtonClick();
+        handleOnStopButtonClick();
         handleDeleteGesture();
+
+        observeLearningUnitList();
+        observeDeleteResult();
+        observeIncreaseMinutesResult();
     }
 
     @Override
@@ -74,25 +78,37 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
     }
 
     private void handleOnItemClick() {
-        recyclerView.addOnItemTouchListener(
-                new RecyclerViewTouchListener(getApplicationContext(), recyclerView,
-                        new RecyclerViewTouchListener.ClickListener() {
-                            @Override
-                            public void onClick(View view, int position) {
-                                LearningUnit learningUnit = entryAdapter.getByPosition(position);
-                                Map<String, String> extras = new HashMap<>();
-                                extras.put(ActivityExtras.LEARNING_UNIT_ID,
-                                        String.valueOf(learningUnit.uid)
-                                );
-                                switchActivity(EditLearningUnitActivity.class, extras);
-                            }
+        entryAdapter.setOnItemClickListener(view -> {
+            int itemPosition = recyclerView.getChildAdapterPosition(view);
+            LearningUnit learningUnit = entryAdapter.getByPosition(itemPosition);
+            Map<String, String> extras = new HashMap<>();
+            extras.put(ActivityExtras.LEARNING_UNIT_ID, String.valueOf(learningUnit.uid));
+            switchActivity(EditLearningUnitActivity.class, extras);
+        });
+    }
 
-                            @Override
-                            public void onLongClick(View view, int position) {
-                                // implement long click if necessary
-                            }
-                        }
-                ));
+    private void handleOnStartButtonClick() {
+        entryAdapter.setStartButtonListener((view, position) -> {
+            View containingItemView = recyclerView.findContainingItemView(view);
+            containingItemView.findViewById(R.id.btnStartTimeTracking).setVisibility(View.GONE);
+            containingItemView.findViewById(R.id.btnStopTimeTracking).setVisibility(View.VISIBLE);
+            Timer.getInstance(position).start();
+            showSnackBar(getResources().getString(R.string.start_recording));
+        });
+    }
+
+    private void handleOnStopButtonClick() {
+        entryAdapter.setStopButtonListener((view, position) -> {
+            View containingItemView = recyclerView.findContainingItemView(view);
+            binding.includedLayoutLearningUnits.loading.setVisibility(View.VISIBLE);
+            containingItemView.findViewById(R.id.btnStartTimeTracking).setVisibility(View.VISIBLE);
+            containingItemView.findViewById(R.id.btnStopTimeTracking).setVisibility(View.GONE);
+            int minutes = Timer.getInstance(position).stop();
+            LearningUnit learningUnit = entryAdapter.getByPosition(position);
+            viewModel.increaseTimeTracking(learningUnit.uid, minutes);
+            showSnackBar(getResources().getString(R.string.stop_recording));
+            loadLearningUnits();
+        });
     }
 
     private void handleDeleteGesture() {
@@ -110,7 +126,7 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                binding.includedLayout.loading.setVisibility(View.VISIBLE);
+                binding.includedLayoutLearningUnits.loading.setVisibility(View.VISIBLE);
                 LearningUnit learningUnit =
                         entryAdapter.getByPosition(viewHolder.getAdapterPosition());
                 viewModel.delete(learningUnit.uid);
@@ -128,7 +144,7 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
     }
 
     private void loadLearningUnits() {
-        binding.includedLayout.loading.setVisibility(View.VISIBLE);
+        binding.includedLayoutLearningUnits.loading.setVisibility(View.VISIBLE);
         String courseIdStr = getActivityExtra(savedInstanceState, ActivityExtras.COURSE_ID);
         viewModel.findByCourseId(Integer.valueOf(courseIdStr));
     }
@@ -139,11 +155,9 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
                 return;
             }
 
-            binding.includedLayout.loading.setVisibility(View.GONE);
+            binding.includedLayoutLearningUnits.loading.setVisibility(View.GONE);
             if (result.getError() != null) {
-                Snackbar.make(findViewById(R.id.recyclerView), result.getError(),
-                        Snackbar.LENGTH_LONG
-                ).show();
+                showSnackBar(result.getError().toString());
             }
 
             List<LearningUnit> learningUnits = result.getSuccess();
@@ -159,14 +173,30 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
                 return;
             }
 
-            binding.includedLayout.loading.setVisibility(View.GONE);
+            binding.includedLayoutLearningUnits.loading.setVisibility(View.GONE);
             if (result.getError() != null) {
-                Snackbar.make(findViewById(R.id.btnDelete), result.getError(), Snackbar.LENGTH_LONG)
-                        .show();
+                showSnackBar(result.getError().toString());
             }
             if (result.getSuccess() != null) {
                 setResult(Activity.RESULT_OK);
                 loadLearningUnits();
+            }
+        });
+    }
+
+    private void observeIncreaseMinutesResult() {
+        viewModel.getIncreaseMinutesResult().observe(this, result -> {
+            if (result == null) {
+                return;
+            }
+
+            binding.includedLayoutLearningUnits.loading.setVisibility(View.GONE);
+            if (result.getError() != null) {
+                showSnackBar(result.getError().toString());
+            }
+            if (result.getSuccess() != null) {
+                setResult(Activity.RESULT_OK);
+                showSnackBar(getResources().getString(R.string.finished_recording));
             }
         });
     }

@@ -26,4 +26,7 @@
     <string name="title_activity_edit_learning_unit">Edit learning unit</string>
     <string name="action_back">back</string>
     <string name="action_edit">edit</string>
+    <string name="start_recording">Start recording</string>
+    <string name="stop_recording">Stop recording</string>
+    <string name="finished_recording">Finished recording and updated learning unit</string>
 </resources>

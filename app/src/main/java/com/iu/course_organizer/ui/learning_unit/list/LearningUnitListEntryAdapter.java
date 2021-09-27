@@ -1,8 +1,10 @@
 package com.iu.course_organizer.ui.learning_unit.list;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,16 +20,25 @@ public class LearningUnitListEntryAdapter
 
     private final List<LearningUnit> learningUnits;
 
+    View.OnClickListener clickListener;
+    OnStartButtonClickListener startButtonClickListener;
+    OnStopButtonClickListener stopButtonClickListener;
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView title;
         private final TextView description;
         private final TextView workingHours;
+        private final Button btnStart;
+        private final Button btnStop;
 
         public ViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.learningUnitListTitle);
             description = view.findViewById(R.id.learningUnitListDescription);
             workingHours = view.findViewById(R.id.learningUnitListWorkingHours);
+
+            btnStart = view.findViewById(R.id.btnStartTimeTracking);
+            btnStop = view.findViewById(R.id.btnStopTimeTracking);
         }
 
         public TextView getDescription() {
@@ -47,6 +58,18 @@ public class LearningUnitListEntryAdapter
         this.learningUnits = courses;
     }
 
+    public void setOnItemClickListener(View.OnClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
+    public void setStartButtonListener(OnStartButtonClickListener buttonListener) {
+        this.startButtonClickListener = buttonListener;
+    }
+
+    public void setStopButtonListener(OnStopButtonClickListener buttonListener) {
+        this.stopButtonClickListener = buttonListener;
+    }
+
     public void setLearningUnits(List<LearningUnit> learningUnits) {
         this.learningUnits.clear();
         this.learningUnits.addAll(learningUnits);
@@ -62,11 +85,32 @@ public class LearningUnitListEntryAdapter
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+        if (null != clickListener) {
+            viewHolder.itemView.setOnClickListener(clickListener);
+        }
+
+        if (null != startButtonClickListener) {
+            viewHolder.btnStart.setOnClickListener(
+                    view -> startButtonClickListener.onClick(view, position));
+        }
+
+        if (null != stopButtonClickListener) {
+            viewHolder.btnStop.setOnClickListener(
+                    view -> stopButtonClickListener.onClick(view, position));
+        }
+
         viewHolder.getDescription().setText(learningUnits.get(position).description);
         viewHolder.getTitle().setText(learningUnits.get(position).title);
-        viewHolder.getWorkingHours().setText("0 / " + learningUnits.get(position).workingHours.toString());
+        Integer spentMinutes = learningUnits.get(position).spentMinutes;
+
+        viewHolder.getWorkingHours()
+                  .setText((null == spentMinutes || 0 == spentMinutes ?
+                          "0" :
+                          ((float) Math.round((float) spentMinutes / 60 * 100) / 100)
+                  ) + " / " + learningUnits.get(position).workingHours.toString());
     }
 
     public LearningUnit getByPosition(int position) {

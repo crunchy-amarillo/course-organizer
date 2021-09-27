@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:divider="@drawable/divider"
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:layout_marginVertical="@dimen/activity_vertical_margin"
-        android:gravity="start"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -61,5 +62,25 @@
                 android:textAppearance="?android:attr/textAppearanceListItemSecondary"
                 android:textColor="@color/muted" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btnStartTimeTracking"
+            style="?attr/colorButtonNormal"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:paddingHorizontal="8dp"
+            app:icon="@android:drawable/ic_menu_recent_history" />
+
+        <Button
+            android:id="@+id/btnStopTimeTracking"
+            style="?attr/colorButtonNormal"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:paddingHorizontal="8dp"
+            android:visibility="gone"
+            app:icon="@android:drawable/ic_media_pause" />
     </LinearLayout>
 </LinearLayout>

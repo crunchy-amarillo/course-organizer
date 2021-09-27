@@ -17,6 +17,8 @@ public class LearningUnitListViewModel extends ViewModel {
     private final MutableLiveData<DefaultResult<List<LearningUnit>>> learningUnits =
             new MutableLiveData<>();
     private final MutableLiveData<DefaultResult<Boolean>> deleteResult = new MutableLiveData<>();
+    private final MutableLiveData<DefaultResult<Boolean>> increaseMinutesResult =
+            new MutableLiveData<>();
     private final LearningUnitRepository learningUnitRepository;
 
     public LearningUnitListViewModel(@NonNull LearningUnitRepository learningUnitRepository) {
@@ -31,6 +33,10 @@ public class LearningUnitListViewModel extends ViewModel {
         return deleteResult;
     }
 
+    public MutableLiveData<DefaultResult<Boolean>> getIncreaseMinutesResult() {
+        return increaseMinutesResult;
+    }
+
     public void findByCourseId(Integer courseId) {
         Thread thread = new Thread(() -> {
             Result<List<LearningUnit>> result = learningUnitRepository.findByCourseId(courseId);
@@ -40,6 +46,19 @@ public class LearningUnitListViewModel extends ViewModel {
                 learningUnits.postValue(new DefaultResult<>(data));
             } else {
                 learningUnits.postValue(new DefaultResult<>(new ArrayList<>()));
+            }
+        });
+        thread.start();
+    }
+
+    public void increaseTimeTracking(Integer learningUnitId, int minutes) {
+        Thread thread = new Thread(() -> {
+            Result<Void> result =
+                    learningUnitRepository.increaseSpentMinutes(learningUnitId, minutes);
+            if (result instanceof Result.Success) {
+                increaseMinutesResult.postValue(new DefaultResult<>(true));
+            } else {
+                increaseMinutesResult.postValue(new DefaultResult<>(false));
             }
         });
         thread.start();

@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.utils.SharedPrefValues;
 import com.iu.course_organizer.data.LoginDataSource;
@@ -79,5 +81,10 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
         }
 
         return extraValue;
+    }
+
+    protected void showSnackBar(String message) {
+        View rootView = this.getWindow().getDecorView().findViewById(android.R.id.content);
+        Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
     }
 }

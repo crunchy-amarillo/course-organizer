@@ -52,6 +52,20 @@ public class LearningUnitRepository {
         }
     }
 
+    public Result<Void> increaseSpentMinutes(Integer learningUnitId, Integer minutes) {
+        try {
+            LearningUnit learningUnit = database.learningUnitDao().findById(learningUnitId);
+            learningUnit.spentMinutes =
+                    (null == learningUnit.spentMinutes ? 0 : learningUnit.spentMinutes) + minutes;
+
+            database.learningUnitDao().update(learningUnit);
+            return new Result.Success<>(true);
+        } catch (Exception e) {
+            return new Result.Error(
+                    new IOException("Error on increasing spent minutes for learning unit", e));
+        }
+    }
+
     public Result<LearningUnit> findById(Integer learningUnitId) {
         try {
             LearningUnit learningUnit = database.learningUnitDao().findById(learningUnitId);
