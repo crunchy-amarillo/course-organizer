@@ -8,18 +8,30 @@ import androidx.lifecycle.ViewModel;
 import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.DefaultResult;
 import com.iu.course_organizer.common.utils.StringUtils;
+import com.iu.course_organizer.data.LearningUnitNoteRepository;
 import com.iu.course_organizer.data.LearningUnitRepository;
 import com.iu.course_organizer.data.Result;
 import com.iu.course_organizer.database.model.LearningUnit;
+import com.iu.course_organizer.database.model.LearningUnitNote;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LearningUnitViewModel extends ViewModel {
     private final MutableLiveData<LearningUnitFormState> formState = new MutableLiveData<>();
     private final MutableLiveData<DefaultResult<Boolean>> submitResult = new MutableLiveData<>();
-    private final MutableLiveData<DefaultResult<LearningUnit>> learningUnit = new MutableLiveData<>();
+    private final MutableLiveData<DefaultResult<LearningUnit>> learningUnit =
+            new MutableLiveData<>();
+    private final MutableLiveData<DefaultResult<List<LearningUnitNote>>> learningUnitNotes =
+            new MutableLiveData<>();
     private final LearningUnitRepository learningUnitRepository;
+    private LearningUnitNoteRepository learningUnitNoteRepository;
 
-    public LearningUnitViewModel(@NonNull LearningUnitRepository learningUnitRepository) {
+    public LearningUnitViewModel(@NonNull LearningUnitRepository learningUnitRepository,
+            @NonNull LearningUnitNoteRepository learningUnitNoteRepository
+    ) {
         this.learningUnitRepository = learningUnitRepository;
+        this.learningUnitNoteRepository = learningUnitNoteRepository;
     }
 
     LiveData<LearningUnitFormState> getFormState() {
@@ -32,6 +44,10 @@ public class LearningUnitViewModel extends ViewModel {
 
     public LiveData<DefaultResult<LearningUnit>> getLearningUnit() {
         return learningUnit;
+    }
+
+    public LiveData<DefaultResult<List<LearningUnitNote>>> getLearningUnitNotes() {
+        return learningUnitNotes;
     }
 
     public void add(String title, String description, String workingHours, Integer courseId) {
@@ -47,11 +63,14 @@ public class LearningUnitViewModel extends ViewModel {
         thread.start();
     }
 
-    public void edit(String title, String description, Integer workingHours, Integer spentMinutes, Integer learningUnitId
+    public void edit(String title, String description, Integer workingHours, Integer spentMinutes,
+            Integer learningUnitId
     ) {
         Thread thread = new Thread(() -> {
             Result<Void> result =
-                    learningUnitRepository.edit(title, description, workingHours, spentMinutes, learningUnitId);
+                    learningUnitRepository.edit(title, description, workingHours, spentMinutes,
+                            learningUnitId
+                    );
             if (result instanceof Result.Success) {
                 submitResult.postValue(new DefaultResult<>(true));
             } else {
@@ -83,5 +102,20 @@ public class LearningUnitViewModel extends ViewModel {
         } else {
             formState.setValue(new LearningUnitFormState(true));
         }
+    }
+
+    public void findNotesByLearningUnitId(Integer learningUnitId) {
+        Thread thread = new Thread(() -> {
+            Result<List<LearningUnitNote>> result =
+                    learningUnitNoteRepository.findByLearningUnitId(learningUnitId);
+            if (result instanceof Result.Success) {
+                List<LearningUnitNote> data =
+                        (List<LearningUnitNote>) ((Result.Success<?>) result).getData();
+                learningUnitNotes.postValue(new DefaultResult<>(data));
+            } else {
+                learningUnitNotes.postValue(new DefaultResult<>(new ArrayList<>()));
+            }
+        });
+        thread.start();
     }
 }

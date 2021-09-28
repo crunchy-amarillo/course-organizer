@@ -31,4 +31,6 @@
     <string name="finished_recording">Die Uhrzeit wurde gestoppt und die Lerneinheit aktualisiert.</string>
     <string name="progress">Fortschritt</string>
     <string name="time_spent">Bisheriger Zeitaufwand (min)</string>
+    <string name="learning_unit_tab1">Lerneinheit</string>
+    <string name="learning_unit_tab2">Notizen</string>
 </resources>

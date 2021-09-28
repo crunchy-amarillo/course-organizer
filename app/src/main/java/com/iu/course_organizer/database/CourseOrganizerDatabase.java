@@ -10,14 +10,17 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.iu.course_organizer.database.dao.CourseDao;
 import com.iu.course_organizer.database.dao.LearningUnitDao;
+import com.iu.course_organizer.database.dao.LearningUnitNoteDao;
 import com.iu.course_organizer.database.dao.UserDao;
 import com.iu.course_organizer.database.model.Course;
 import com.iu.course_organizer.database.model.LearningUnit;
+import com.iu.course_organizer.database.model.LearningUnitNote;
 import com.iu.course_organizer.database.model.User;
 
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Course.class, LearningUnit.class}, version = 1)
+@Database(entities = {User.class, Course.class, LearningUnit.class, LearningUnitNote.class
+}, version = 1)
 public abstract class CourseOrganizerDatabase extends RoomDatabase {
     private static CourseOrganizerDatabase instance;
 
@@ -26,6 +29,8 @@ public abstract class CourseOrganizerDatabase extends RoomDatabase {
     public abstract CourseDao courseDao();
 
     public abstract LearningUnitDao learningUnitDao();
+
+    public abstract LearningUnitNoteDao learningUnitNoteDao();
 
     public abstract UserDao userDao();
 

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.iu.course_organizer.data.LearningUnitNoteRepository;
 import com.iu.course_organizer.data.LearningUnitRepository;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
 
@@ -18,7 +19,9 @@ public class LearningUnitViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(LearningUnitViewModel.class)) {
-            return (T) new LearningUnitViewModel(LearningUnitRepository.getInstance(database));
+            return (T) new LearningUnitViewModel(LearningUnitRepository.getInstance(database),
+                    LearningUnitNoteRepository.getInstance(database)
+            );
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
