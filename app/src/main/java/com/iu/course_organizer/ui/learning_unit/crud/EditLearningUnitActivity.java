@@ -6,25 +6,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.utils.ActivityExtras;
 import com.iu.course_organizer.common.utils.StringUtils;
+import com.iu.course_organizer.data.LearningUnitNoteRepository;
+import com.iu.course_organizer.data.Result;
+import com.iu.course_organizer.database.CourseOrganizerDatabase;
 import com.iu.course_organizer.database.model.LearningUnitNote;
 import com.iu.course_organizer.databinding.ActivityEditLearningUnitBinding;
 import com.iu.course_organizer.databinding.ContentEditLearningUnitBinding;
+import com.iu.course_organizer.ui.learning_unit.notes.AddLearningUnitNoteActivity;
 import com.iu.course_organizer.ui.learning_unit.notes.LearningUnitNoteListEntryAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EditLearningUnitActivity extends LearningUnitActivity {
 
     private ActivityEditLearningUnitBinding binding;
     private LearningUnitNoteListEntryAdapter entryAdapter;
     private RecyclerView recyclerView;
+    LearningUnitNoteRepository noteRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +43,14 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbarWrapper.toolbar);
+         noteRepository =
+                LearningUnitNoteRepository.getInstance(CourseOrganizerDatabase.getInstance(this));
 
         observeFormInputs();
         observeEditResult();
         initFormData();
         initFormInputChangeListener();
+        handleNewButton();
         handleSubmitButton();
         handleCancelButton();
         handleTabs();
@@ -46,12 +58,14 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
         initLearningUnitNoteListAdapter();
         loadLearningUnitNotes();
         observeLearningUnitNoteList();
+        handleLearningUnitNoteDeleteGesture();
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
         binding.includedForm.loading.setVisibility(View.INVISIBLE);
+        loadLearningUnitNotes();
     }
 
     private void loadLearningUnitNotes() {
@@ -99,6 +113,18 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
         });
     }
 
+    private void handleNewButton() {
+        Map<String, String> extras = new HashMap<>();
+        extras.put(ActivityExtras.LEARNING_UNIT_ID,
+                getActivityExtra(savedInstanceState, ActivityExtras.LEARNING_UNIT_ID)
+        );
+
+        binding.includedForm.btnAddNote.setOnClickListener(view -> {
+            switchActivity(AddLearningUnitNoteActivity.class, extras);
+        });
+    }
+
+
     private void handleSubmitButton() {
         ContentEditLearningUnitBinding form = binding.includedForm;
 
@@ -134,6 +160,7 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
                 tab2.setTextColor(getResources().getColor(R.color.muted, getTheme()));
                 findViewById(R.id.tab1Wrapper).setVisibility(View.VISIBLE);
                 findViewById(R.id.tab2Wrapper).setVisibility(View.GONE);
+                findViewById(R.id.btnAddNote).setVisibility(View.GONE);
             } else if (view.getId() == tab2.getId()) {
                 tab1.setActivated(false);
                 tab1.setTextColor(getResources().getColor(R.color.muted, getTheme()));
@@ -141,6 +168,7 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
                 tab2.setTextColor(getResources().getColor(R.color.primary_2, getTheme()));
                 findViewById(R.id.tab1Wrapper).setVisibility(View.GONE);
                 findViewById(R.id.tab2Wrapper).setVisibility(View.VISIBLE);
+                findViewById(R.id.btnAddNote).setVisibility(View.VISIBLE);
             }
         };
         form.btnTab1.setOnClickListener(onClickListener);
@@ -150,6 +178,40 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
     private void handleCancelButton() {
         ContentEditLearningUnitBinding form = binding.includedForm;
         doHandleCancelButton(form.btnCancelEditLearningUnit, form.loading);
+    }
+
+    private void handleLearningUnitNoteDeleteGesture() {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
+        ) {
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                    @NonNull RecyclerView.ViewHolder viewHolder,
+                    @NonNull RecyclerView.ViewHolder target
+            ) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                binding.includedForm.includedLayoutLearningUnitNotes.loading.setVisibility(
+                        View.VISIBLE);
+                LearningUnitNote learningUnitNote =
+                        entryAdapter.getByPosition(viewHolder.getAdapterPosition());
+
+                Thread thread = new Thread(() -> {
+                    Result<Void> result = noteRepository.delete(learningUnitNote.uid);
+                    if (result instanceof Result.Success) {
+                        loadLearningUnitNotes();
+                    }
+                });
+                thread.start();
+
+            }
+        });
+
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     private void initFormInputChangeListener() {

@@ -33,4 +33,6 @@
     <string name="time_spent">Bisheriger Zeitaufwand (min)</string>
     <string name="learning_unit_tab1">Lerneinheit</string>
     <string name="learning_unit_tab2">Notizen</string>
+    <string name="note">Notiz</string>
+    <string name="title_activity_add_learning_unit_note">Neue Notiz anlegen</string>
 </resources>

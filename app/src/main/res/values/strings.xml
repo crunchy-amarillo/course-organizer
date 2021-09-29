@@ -33,4 +33,6 @@
     <string name="time_spent">Time spent (min)</string>
     <string name="learning_unit_tab1">Learning unit</string>
     <string name="learning_unit_tab2">notes</string>
+    <string name="note">note</string>
+    <string name="title_activity_add_learning_unit_note">add new note</string>
 </resources>
