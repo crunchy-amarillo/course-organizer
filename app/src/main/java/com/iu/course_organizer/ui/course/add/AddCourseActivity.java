@@ -1,7 +1,6 @@
 package com.iu.course_organizer.ui.course.add;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.iu.course_organizer.R;
-import com.iu.course_organizer.common.utils.SharedPrefValues;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
 import com.iu.course_organizer.databinding.ActivityAddCourseBinding;
 import com.iu.course_organizer.databinding.ContentAddCourseBinding;
@@ -52,9 +50,7 @@ public class AddCourseActivity extends AppCombatDefaultActivity {
 
     private void handleSubmitButton() {
         ContentAddCourseBinding form = binding.includedForm;
-        SharedPreferences sharedPreferences =
-                getSharedPreferences(SharedPrefValues.USER_DETAILS, MODE_PRIVATE);
-        int userId = sharedPreferences.getInt(SharedPrefValues.USER_ID, -1);
+        Integer userId = getLoginRepository().getUser().getUserId();
 
         form.btnAddCourse.setOnClickListener(v -> {
             form.loading.setVisibility(View.VISIBLE);

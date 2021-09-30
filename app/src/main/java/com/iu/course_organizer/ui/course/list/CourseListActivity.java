@@ -1,7 +1,6 @@
 package com.iu.course_organizer.ui.course.list;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -15,7 +14,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.RecyclerViewTouchListener;
 import com.iu.course_organizer.common.utils.ActivityExtras;
-import com.iu.course_organizer.common.utils.SharedPrefValues;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
 import com.iu.course_organizer.database.model.Course;
 import com.iu.course_organizer.databinding.ActivityCourseListBinding;
@@ -123,9 +121,7 @@ public class CourseListActivity extends AppCombatDefaultActivity {
 
     private void loadCourses() {
         binding.includedLayout.loading.setVisibility(View.VISIBLE);
-        SharedPreferences sharedPreferences =
-                getSharedPreferences(SharedPrefValues.USER_DETAILS, MODE_PRIVATE);
-        int userId = sharedPreferences.getInt(SharedPrefValues.USER_ID, -1);
+        Integer userId = getLoginRepository().getUser().getUserId();
         viewModel.findByUserId(userId);
     }
 
