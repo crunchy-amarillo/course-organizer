@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,8 @@ import androidx.core.view.MenuCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.iu.course_organizer.R;
+import com.iu.course_organizer.common.CsvWriter;
+import com.iu.course_organizer.data.LearningUnitRepository;
 import com.iu.course_organizer.data.LoginDataSource;
 import com.iu.course_organizer.data.LoginRepository;
 import com.iu.course_organizer.data.model.LoggedInUser;
@@ -60,6 +63,9 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.btnLogout:
                 doLogout();
+                return true;
+            case R.id.btnExport:
+                doExport();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -112,6 +118,22 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
         if (!loginRepository.isLoggedIn()) {
             doLogout();
         }
+    }
+
+    private void doExport() {
+        Thread thread = new Thread(() -> {
+            try {
+                LearningUnitRepository learningUnitRepository = LearningUnitRepository.getInstance(
+                        CourseOrganizerDatabase.getInstance(this));
+                CsvWriter csvWriter = new CsvWriter(learningUnitRepository, loginRepository);
+                String filePath = csvWriter.write();
+                showSnackBar(getResources().getString(R.string.export_succesful, filePath));
+            } catch (Exception sqlEx) {
+                showSnackBar(getResources().getString(R.string.error_export));
+                Log.e(this.getClass().getSimpleName(), sqlEx.getMessage(), sqlEx);
+            }
+        });
+        thread.start();
     }
 
     private void doLogout() {

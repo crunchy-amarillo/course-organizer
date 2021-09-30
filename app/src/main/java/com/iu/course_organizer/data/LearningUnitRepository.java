@@ -36,8 +36,8 @@ public class LearningUnitRepository {
         }
     }
 
-    public Result<Void> edit(String title, String description, Integer workingHours, Integer spentMinutes,
-            Integer learningUnitId
+    public Result<Void> edit(String title, String description, Integer workingHours,
+            Integer spentMinutes, Integer learningUnitId
     ) {
         try {
             LearningUnit learningUnit = database.learningUnitDao().findById(learningUnitId);
@@ -80,6 +80,15 @@ public class LearningUnitRepository {
     public Result<List<LearningUnit>> findByCourseId(Integer courseId) {
         try {
             List<LearningUnit> learningUnits = database.learningUnitDao().findByCourseId(courseId);
+            return new Result.Success<List<LearningUnit>>(learningUnits);
+        } catch (Exception e) {
+            return new Result.Error(new IOException("Error while fetching learning units", e));
+        }
+    }
+
+    public Result<List<LearningUnit>> findByUserId(Integer userId) {
+        try {
+            List<LearningUnit> learningUnits = database.learningUnitDao().findByUserId(userId);
             return new Result.Success<List<LearningUnit>>(learningUnits);
         } catch (Exception e) {
             return new Result.Error(new IOException("Error while fetching learning units", e));

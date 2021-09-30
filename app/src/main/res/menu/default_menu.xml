@@ -12,6 +12,13 @@
 
     <group android:id="@+id/menuGroup2">
         <android:item
+            android:id="@+id/btnExport"
+            android:icon="@android:drawable/ic_menu_set_as"
+            android:title="@string/export"
+            iconTint="@color/black"
+            app:showAsAction="never" />
+
+        <android:item
             android:id="@+id/btnLogout"
             android:icon="@android:drawable/ic_lock_power_off"
             android:title="@string/logout"

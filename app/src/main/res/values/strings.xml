@@ -36,4 +36,7 @@
     <string name="note">note</string>
     <string name="title_activity_add_learning_unit_note">add new note</string>
     <string name="loggedin_user">logged in as %s</string>
+    <string name="export">export</string>
+    <string name="error_export">"an error occured - could not export data "</string>
+    <string name="export_succesful">exported data to file \"%s\"</string>
 </resources>

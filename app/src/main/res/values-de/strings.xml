@@ -36,4 +36,7 @@
     <string name="note">Notiz</string>
     <string name="title_activity_add_learning_unit_note">Neue Notiz anlegen</string>
     <string name="loggedin_user">Sie sind eingeloggt als "%s"</string>
+    <string name="export">Export</string>
+    <string name="error_export">"Ein Fehler ist aufgetreten - die Daten konnten nicht exportiert werden."</string>
+    <string name="export_succesful">Die Daten wurden nach "%s" exportiert.</string>
 </resources>
