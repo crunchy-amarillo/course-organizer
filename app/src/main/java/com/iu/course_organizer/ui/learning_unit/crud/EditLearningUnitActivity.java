@@ -159,11 +159,10 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
         try {
             pictureFile = getPictureFileUri();
 
-            Uri fileProvider =
-                    FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
-                            BuildConfig.APPLICATION_ID + ".provider", pictureFile
-                    );
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+            Uri uri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                    BuildConfig.APPLICATION_ID + ".provider", pictureFile
+            );
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
@@ -201,7 +200,9 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
                     Integer learningUnitId = Integer.valueOf(
                             getActivityExtra(savedInstanceState, ActivityExtras.LEARNING_UNIT_ID));
                     Result<Void> result =
-                            noteRepository.add("uploaded picture", pictureFile.getAbsolutePath(), learningUnitId);
+                            noteRepository.add("uploaded picture", pictureFile.getAbsolutePath(),
+                                    learningUnitId
+                            );
                     if (result instanceof Result.Success) {
                         loadLearningUnitNotes();
                         showSnackBar(getResources().getString(R.string.picture_successful));

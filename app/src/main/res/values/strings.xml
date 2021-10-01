@@ -36,7 +36,8 @@
     <string name="note">note</string>
     <string name="title_activity_add_learning_unit_note">add new note</string>
     <string name="loggedin_user">logged in as %s</string>
-    <string name="export">export</string>
+    <string name="export">export (csv)</string>
+    <string name="export_pdf">mail pdf export</string>
     <string name="error_export">"an error occured - could not export data "</string>
     <string name="export_succesful">exported data to file \"%s\"</string>
     <string name="error_picture">Could not create picture</string>
@@ -46,4 +47,7 @@
     <string name="choose_csv_file">Choose a file in csv format</string>
     <string name="error_import">Could not import data</string>
     <string name="import_successful">Successfully imported data</string>
+    <string name="email_choose_provider">Choose your email provider</string>
+    <string name="email_subject_export">Your export of CourseOrganizer</string>
+    <string name="email_text_export">You will find your exported pdf as attachement.</string>
 </resources>

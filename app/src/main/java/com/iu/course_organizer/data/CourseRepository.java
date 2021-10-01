@@ -39,6 +39,15 @@ public class CourseRepository {
         }
     }
 
+    public Result<Course> findById(Integer courseId) {
+        try {
+            Course course = database.courseDao().findById(courseId);
+            return new Result.Success<Course>(course);
+        } catch (Exception e) {
+            return new Result.Error(new IOException("Error while fetching courses", e));
+        }
+    }
+
     public Result<List<Course>> findByUserId(Integer userId) {
         try {
             List<Course> courses = database.courseDao().findByUserId(userId);

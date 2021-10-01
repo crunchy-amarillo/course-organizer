@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.CsvExporter;
+import com.iu.course_organizer.common.PdfWriter;
 import com.iu.course_organizer.common.Timer;
 import com.iu.course_organizer.common.utils.ActivityExtras;
 import com.iu.course_organizer.data.CourseRepository;
@@ -28,6 +29,7 @@ import com.iu.course_organizer.ui.AppCombatDefaultActivity;
 import com.iu.course_organizer.ui.learning_unit.crud.AddLearningUnitActivity;
 import com.iu.course_organizer.ui.learning_unit.crud.EditLearningUnitActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +37,8 @@ import java.util.Map;
 
 public class LearningUnitListActivity extends AppCombatDefaultActivity {
 
-    private static final int PERMISSION_REQUEST_CODE = 2296;
+    private static final int PERMISSION_EXPORT_REQUEST_CODE = 1111;
+
     private LearningUnitListViewModel viewModel;
     private ActivityLearningUnitListBinding binding;
     private Bundle savedInstanceState;
@@ -80,7 +83,7 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
         switch (item.getItemId()) {
             case R.id.btnExport:
                 if (!checkStoragePermission()) {
-                    requestStoragePermission(PERMISSION_REQUEST_CODE);
+                    requestStoragePermission(PERMISSION_EXPORT_REQUEST_CODE);
                 } else {
                     handleExport();
                 }
@@ -95,7 +98,7 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         // init export
-        if (requestCode == PERMISSION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PERMISSION_EXPORT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             handleExport();
         }
     }

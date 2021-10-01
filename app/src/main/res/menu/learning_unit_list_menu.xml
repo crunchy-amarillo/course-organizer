@@ -4,32 +4,39 @@
     <group android:id="@+id/menuGroup1">
         <android:item
             android:id="@+id/menuUser"
+            iconTint="@color/black"
             android:icon="@android:drawable/ic_dialog_info"
             android:title="@string/loggedin_user"
-            iconTint="@color/black"
             app:showAsAction="never" />
     </group>
 
     <group android:id="@+id/menuGroup2">
         <android:item
             android:id="@+id/btnCourseList"
+            iconTint="@color/black"
             android:icon="@android:drawable/ic_menu_agenda"
             android:title="@string/title_activity_course_list"
-            iconTint="@color/black"
             app:showAsAction="never" />
 
         <android:item
             android:id="@+id/btnExport"
+            iconTint="@color/black"
             android:icon="@android:drawable/ic_menu_set_as"
             android:title="@string/export"
+            app:showAsAction="never" />
+
+        <android:item
+            android:id="@+id/btnExportAndMail"
             iconTint="@color/black"
+            android:icon="@android:drawable/ic_dialog_email"
+            android:title="@string/export_pdf"
             app:showAsAction="never" />
 
         <android:item
             android:id="@+id/btnLogout"
+            iconTint="@color/white"
             android:icon="@android:drawable/ic_lock_power_off"
             android:title="@string/logout"
-            iconTint="@color/white"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="never" />
     </group>
 </menu>

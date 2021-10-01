@@ -35,15 +35,19 @@
     <string name="learning_unit_tab2">Notizen</string>
     <string name="note">Notiz</string>
     <string name="title_activity_add_learning_unit_note">Neue Notiz anlegen</string>
-    <string name="loggedin_user">Sie sind eingeloggt als "%s"</string>
-    <string name="export">Export</string>
+    <string name="loggedin_user">Du bist eingeloggt als "%s"</string>
+    <string name="export">Export (CSV)</string>
+    <string name="export_pdf">PDF-Export versenden</string>
     <string name="error_export">"Ein Fehler ist aufgetreten - die Daten konnten nicht exportiert werden."</string>
     <string name="export_succesful">Die Daten wurden nach "%s" exportiert.</string>
     <string name="error_picture">Problem beim Erstellen eines Fotos.</string>
     <string name="picture_successful">Foto erfolgreich zu den Notizen hinzugefügt</string>
     <string name="import_title">Import</string>
     <string name="title_activity_import_courses">Import</string>
-    <string name="choose_csv_file">Wählen Sie eine CSV-Datei aus</string>
+    <string name="choose_csv_file">Wähle eine CSV-Datei aus</string>
     <string name="error_import">Die Daten konnten nicht importiert werden</string>
     <string name="import_successful">Die Daten wurden erfolgreich importiert</string>
+    <string name="email_choose_provider">Wähle ein E-Mail-Programm aus</string>
+    <string name="email_subject_export">Dein Export aus CourseOrganizer</string>
+    <string name="email_text_export">Du findest das exportierte PDF im Anhang.</string>
 </resources>

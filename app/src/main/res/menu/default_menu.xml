@@ -19,10 +19,17 @@
             app:showAsAction="never" />
 
         <android:item
+            android:id="@+id/btnExportAndMail"
+            iconTint="@color/black"
+            android:icon="@android:drawable/ic_dialog_email"
+            android:title="@string/export_pdf"
+            app:showAsAction="never" />
+
+        <android:item
             android:id="@+id/btnLogout"
             android:icon="@android:drawable/ic_lock_power_off"
             android:title="@string/logout"
             iconTint="@color/white"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="never" />
     </group>
 </menu>

@@ -13,18 +13,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.view.MenuCompat;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.iu.course_organizer.BuildConfig;
 import com.iu.course_organizer.R;
+import com.iu.course_organizer.common.PdfWriter;
 import com.iu.course_organizer.data.LoginDataSource;
 import com.iu.course_organizer.data.LoginRepository;
 import com.iu.course_organizer.data.model.LoggedInUser;
@@ -32,9 +37,13 @@ import com.iu.course_organizer.database.CourseOrganizerDatabase;
 import com.iu.course_organizer.ui.course.list.CourseListActivity;
 import com.iu.course_organizer.ui.login.LoginActivity;
 
+import java.io.File;
 import java.util.Map;
+import java.util.Objects;
 
 public class AppCombatDefaultActivity extends AppCompatActivity {
+
+    private static final int PERMISSION_EXPORT_PDF_REQUEST_CODE = 1112;
 
     private LoginRepository loginRepository;
 
@@ -77,8 +86,24 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
             case R.id.btnCourseList:
                 switchActivity(CourseListActivity.class);
                 return true;
+            case R.id.btnExportAndMail:
+                if (!checkStoragePermission()) {
+                    requestStoragePermission(PERMISSION_EXPORT_PDF_REQUEST_CODE);
+                } else {
+                    doPdfExportAndMail();
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // init pdf export
+        if (requestCode == PERMISSION_EXPORT_PDF_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            doPdfExportAndMail();
         }
     }
 
@@ -139,6 +164,22 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
         switchActivity(LoginActivity.class);
     }
 
+    protected void doPdfExportAndMail() {
+        PdfWriter pdfWriter = new PdfWriter();
+        Thread thread = new Thread(() -> {
+            try {
+                File pdf = pdfWriter.createPdf(findViewById(android.R.id.content));
+                sendMail(getResources().getString(R.string.email_subject_export),
+                        getResources().getString(R.string.email_text_export), pdf
+                );
+            } catch (Exception e) {
+                showSnackBar(getResources().getString(R.string.error_export));
+                Log.e(this.getClass().getSimpleName(), "Could not create pdf", e);
+            }
+        });
+        thread.start();
+    }
+
     protected void requestStoragePermission(int requestCode) {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             try {
@@ -169,5 +210,29 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
             return resultRead == PackageManager.PERMISSION_GRANTED &&
                     resultWrite == PackageManager.PERMISSION_GRANTED;
         }
+    }
+
+    protected void sendMail(@NonNull String subject, @NonNull String text, @Nullable File attachment
+    ) throws Exception {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, text);
+
+        if (null != attachment) {
+            if (!attachment.exists() || !attachment.canRead()) {
+                throw new Exception("Invalid attachement");
+            }
+
+            Uri uri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                    BuildConfig.APPLICATION_ID + ".provider", attachment
+            );
+            emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        }
+
+        startActivity(Intent.createChooser(emailIntent,
+                getResources().getString(R.string.email_choose_provider)
+        ));
     }
 }

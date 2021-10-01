@@ -30,7 +30,7 @@ public class CsvExporter {
     }
 
     public String writeCourses() throws Exception {
-        File file = getFile("Export-CourseOrganizer-Courses.csv");
+        File file = FileUtils.getFile("Export-CourseOrganizer-Courses.csv");
 
         List<Course> courses = loadCourses();
 
@@ -60,7 +60,7 @@ public class CsvExporter {
     }
 
     public String writeLearningUnits() throws Exception {
-        File file = getFile("Export-CourseOrganizer-LearningUnits.csv");
+        File file = FileUtils.getFile("Export-CourseOrganizer-LearningUnits.csv");
 
         List<LearningUnit> learningUnits = loadLearningUnits();
 
@@ -110,20 +110,5 @@ public class CsvExporter {
         } else {
             throw new Exception("Could not export data");
         }
-    }
-
-    private File getFile(String filename) throws IOException {
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        if (!path.exists()) {
-            path.mkdirs();
-        }
-
-        File file = new File(path, filename);
-        if (file.exists()) {
-            file.delete();
-        }
-        file.createNewFile();
-
-        return file;
     }
 }
