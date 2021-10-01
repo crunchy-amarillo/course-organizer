@@ -66,6 +66,11 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
         loadLearningUnits();
     }
 
+    protected boolean showMenuExportItem()
+    {
+        return true;
+    }
+
     private void handleNewButton() {
         Map<String, String> extras = new HashMap<>();
         extras.put(ActivityExtras.COURSE_ID,

@@ -16,11 +16,14 @@ import androidx.core.view.MenuCompat;
 import com.google.android.material.snackbar.Snackbar;
 import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.CsvWriter;
+import com.iu.course_organizer.data.CourseRepository;
 import com.iu.course_organizer.data.LearningUnitRepository;
 import com.iu.course_organizer.data.LoginDataSource;
 import com.iu.course_organizer.data.LoginRepository;
 import com.iu.course_organizer.data.model.LoggedInUser;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
+import com.iu.course_organizer.ui.course.list.CourseListActivity;
+import com.iu.course_organizer.ui.learning_unit.list.LearningUnitListActivity;
 import com.iu.course_organizer.ui.login.LoginActivity;
 
 import java.util.Map;
@@ -54,6 +57,8 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
         item.setTitle(getResources().getString(R.string.loggedin_user,
                 null == user ? "" : user.getDisplayName()
         ));
+
+        menu.findItem(R.id.btnExport).setVisible(showMenuExportItem());
 
         return true;
     }
@@ -114,6 +119,10 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
         Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
     }
 
+    protected boolean showMenuExportItem() {
+        return false;
+    }
+
     private void checkLogin() {
         if (!loginRepository.isLoggedIn()) {
             doLogout();
@@ -123,10 +132,21 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
     private void doExport() {
         Thread thread = new Thread(() -> {
             try {
+                CourseRepository courseRepository =
+                        CourseRepository.getInstance(CourseOrganizerDatabase.getInstance(this));
                 LearningUnitRepository learningUnitRepository = LearningUnitRepository.getInstance(
                         CourseOrganizerDatabase.getInstance(this));
-                CsvWriter csvWriter = new CsvWriter(learningUnitRepository, loginRepository);
-                String filePath = csvWriter.write();
+                CsvWriter csvWriter =
+                        new CsvWriter(courseRepository, learningUnitRepository, loginRepository);
+
+                String filePath = "";
+                if (this instanceof LearningUnitListActivity) {
+                    filePath = csvWriter.writeLearningUnits();
+                }
+                if (this instanceof CourseListActivity) {
+                    filePath = csvWriter.writeCourses();
+                }
+
                 showSnackBar(getResources().getString(R.string.export_succesful, filePath));
             } catch (Exception sqlEx) {
                 showSnackBar(getResources().getString(R.string.error_export));

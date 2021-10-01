@@ -2,9 +2,11 @@ package com.iu.course_organizer.common;
 
 import android.os.Environment;
 
+import com.iu.course_organizer.data.CourseRepository;
 import com.iu.course_organizer.data.LearningUnitRepository;
 import com.iu.course_organizer.data.LoginRepository;
 import com.iu.course_organizer.data.Result;
+import com.iu.course_organizer.database.model.Course;
 import com.iu.course_organizer.database.model.LearningUnit;
 
 import java.io.BufferedWriter;
@@ -15,23 +17,53 @@ import java.util.List;
 import java.util.StringJoiner;
 
 public class CsvWriter {
+    private CourseRepository courseRepository;
     private LearningUnitRepository learningUnitRepository;
     private LoginRepository loginRepository;
 
-    public CsvWriter(LearningUnitRepository learningUnitRepository, LoginRepository loginRepository
+    public CsvWriter(CourseRepository courseRepository,
+            LearningUnitRepository learningUnitRepository, LoginRepository loginRepository
     ) {
+        this.courseRepository = courseRepository;
         this.learningUnitRepository = learningUnitRepository;
         this.loginRepository = loginRepository;
     }
 
-    public String write() throws Exception {
-        File file = getFile();
+    public String writeCourses() throws Exception {
+        File file = getFile("Export-CourseOrganizer-Courses.csv");
 
-        List<LearningUnit> learningUnits = loadData();
-        return writeData(learningUnits, file);
+        List<Course> courses = loadCourses();
+
+        FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        String separator = ",";
+        StringJoiner stringJoiner = new StringJoiner(separator);
+        stringJoiner.add("uid");
+        stringJoiner.add("title");
+        stringJoiner.add("description");
+        stringJoiner.add("session");
+
+        bufferedWriter.write(stringJoiner.toString() + "\n");
+
+        for (Course course : courses) {
+            stringJoiner = new StringJoiner(separator);
+            stringJoiner.add(course.uid.toString());
+            stringJoiner.add(course.title);
+            stringJoiner.add(course.description);
+            stringJoiner.add(course.session.toString());
+            bufferedWriter.write(stringJoiner.toString() + "\n");
+        }
+
+        bufferedWriter.close();
+
+        return file.getAbsoluteFile().getAbsolutePath();
     }
 
-    private String writeData(List<LearningUnit> learningUnits, File file) throws IOException {
+    public String writeLearningUnits() throws Exception {
+        File file = getFile("Export-CourseOrganizer-LearningUnits.csv");
+
+        List<LearningUnit> learningUnits = loadLearningUnits();
+
         FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         String separator = ",";
@@ -49,7 +81,7 @@ public class CsvWriter {
             stringJoiner.add(learningUnit.uid.toString());
             stringJoiner.add(learningUnit.title);
             stringJoiner.add(learningUnit.description);
-            stringJoiner.add(null != learningUnit.workingHours ? learningUnit.workingHours.toString() : "");
+            stringJoiner.add(learningUnit.workingHours.toString());
             stringJoiner.add(
                     null != learningUnit.spentMinutes ? learningUnit.spentMinutes.toString() : "");
             bufferedWriter.write(stringJoiner.toString() + "\n");
@@ -60,7 +92,17 @@ public class CsvWriter {
         return file.getAbsoluteFile().getAbsolutePath();
     }
 
-    private List<LearningUnit> loadData() throws Exception {
+    private List<Course> loadCourses() throws Exception {
+        Result<List<Course>> result =
+                courseRepository.findByUserId(loginRepository.getUser().getUserId());
+        if (result instanceof Result.Success) {
+            return (List<Course>) ((Result.Success<?>) result).getData();
+        } else {
+            throw new Exception("Could not export data");
+        }
+    }
+
+    private List<LearningUnit> loadLearningUnits() throws Exception {
         Result<List<LearningUnit>> result =
                 learningUnitRepository.findByUserId(loginRepository.getUser().getUserId());
         if (result instanceof Result.Success) {
@@ -70,13 +112,13 @@ public class CsvWriter {
         }
     }
 
-    private File getFile() throws IOException {
+    private File getFile(String filename) throws IOException {
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         if (!path.exists()) {
             path.mkdirs();
         }
 
-        File file = new File(path, "Export-CourseOrganizer.csv");
+        File file = new File(path, filename);
         if (file.exists()) {
             file.delete();
         }

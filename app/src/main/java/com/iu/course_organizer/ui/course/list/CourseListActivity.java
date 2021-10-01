@@ -60,6 +60,12 @@ public class CourseListActivity extends AppCombatDefaultActivity {
         loadCourses();
     }
 
+    protected boolean showMenuExportItem()
+    {
+        return true;
+    }
+
+
     private void handleNewButton() {
         binding.btnAddCourse.setOnClickListener(view -> {
             switchActivity(AddCourseActivity.class);
