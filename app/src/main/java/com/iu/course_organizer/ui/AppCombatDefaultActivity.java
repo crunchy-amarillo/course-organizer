@@ -161,6 +161,7 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
 
     private void doLogout() {
         loginRepository.logout();
+        this.finish();
         switchActivity(LoginActivity.class);
     }
 
