@@ -12,18 +12,17 @@
 
     <group android:id="@+id/menuGroup2">
         <android:item
-            android:id="@+id/btnExport"
-            android:icon="@android:drawable/ic_menu_set_as"
-            android:title="@string/export"
+            android:id="@+id/btnCourseList"
+            android:icon="@android:drawable/ic_menu_agenda"
+            android:title="@string/title_activity_course_list"
             iconTint="@color/black"
-            visible="false"
             app:showAsAction="never" />
 
         <android:item
             android:id="@+id/btnLogout"
             android:icon="@android:drawable/ic_lock_power_off"
             android:title="@string/logout"
-            iconTint="@color/black"
-            app:showAsAction="never" />
+            iconTint="@color/white"
+            app:showAsAction="ifRoom" />
     </group>
 </menu>

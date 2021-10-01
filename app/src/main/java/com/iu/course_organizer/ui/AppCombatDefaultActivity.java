@@ -29,6 +29,7 @@ import com.iu.course_organizer.data.LoginDataSource;
 import com.iu.course_organizer.data.LoginRepository;
 import com.iu.course_organizer.data.model.LoggedInUser;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
+import com.iu.course_organizer.ui.course.list.CourseListActivity;
 import com.iu.course_organizer.ui.login.LoginActivity;
 
 import java.util.Map;
@@ -72,6 +73,9 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.btnLogout:
                 doLogout();
+                return true;
+            case R.id.btnCourseList:
+                switchActivity(CourseListActivity.class);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
