@@ -75,6 +75,7 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
         loadLearningUnitNotes();
         observeLearningUnitNoteList();
         handleLearningUnitNoteDeleteGesture();
+        handleOnSaveToGoogleButtonButtonClick();
     }
 
     @Override
@@ -148,6 +149,24 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
 
         binding.includedForm.btnAddPicture.setOnClickListener(view -> {
             launchCamera(view);
+        });
+    }
+
+    private void handleOnSaveToGoogleButtonButtonClick() {
+        // todo: use google drive api instead of general intent
+        entryAdapter.setSaveToGoogleButtonListener((view, position) -> {
+            LearningUnitNote note = entryAdapter.getByPosition(position);
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+
+            Uri uri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                    BuildConfig.APPLICATION_ID + ".provider", new File(note.picturePath)
+            );
+            sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            sendIntent.setType("image/jpeg");
+
+            Intent shareIntent = Intent.createChooser(sendIntent, null);
+            startActivity(shareIntent);
         });
     }
 

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:divider="@drawable/divider"
     android:orientation="vertical"
     android:showDividers="end">
@@ -15,8 +16,9 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/learningUnitNote"
@@ -31,5 +33,15 @@
                 android:layout_height="100dp"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSaveToGoogle"
+            style="?attr/colorButtonNormal"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:paddingHorizontal="8dp"
+            android:visibility="gone"
+            app:icon="@android:drawable/ic_menu_upload" />
     </LinearLayout>
 </LinearLayout>

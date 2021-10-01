@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,15 +23,18 @@ public class LearningUnitNoteListEntryAdapter
         extends RecyclerView.Adapter<LearningUnitNoteListEntryAdapter.ViewHolder> {
 
     private final List<LearningUnitNote> learningUnitNotes;
+    OnSaveToGoogleButtonClickListener saveToGoogleButtonClickListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView note;
         private final ImageView picture;
+        private final Button btnSaveToGoogle;
 
         public ViewHolder(View view) {
             super(view);
             note = view.findViewById(R.id.learningUnitNote);
             picture = view.findViewById(R.id.learningUnitPicture);
+            btnSaveToGoogle = view.findViewById(R.id.btnSaveToGoogle);
         }
 
         public TextView getNote() {
@@ -40,10 +44,18 @@ public class LearningUnitNoteListEntryAdapter
         public ImageView getPicture() {
             return picture;
         }
+
+        public Button getBtnSaveToGoogle() {
+            return btnSaveToGoogle;
+        }
     }
 
     public LearningUnitNoteListEntryAdapter(List<LearningUnitNote> learningUnitNotes) {
         this.learningUnitNotes = learningUnitNotes;
+    }
+
+    public void setSaveToGoogleButtonListener(OnSaveToGoogleButtonClickListener buttonListener) {
+        this.saveToGoogleButtonClickListener = buttonListener;
     }
 
     public void setLearningUnitNotes(List<LearningUnitNote> learningUnitNotes) {
@@ -71,6 +83,12 @@ public class LearningUnitNoteListEntryAdapter
             Bitmap picture = BitmapFactory.decodeFile(picturePath);
             viewHolder.getPicture().setImageBitmap(picture);
             viewHolder.getPicture().setMaxHeight(100);
+            viewHolder.getBtnSaveToGoogle().setVisibility(View.VISIBLE);
+
+            if (null != saveToGoogleButtonClickListener) {
+                viewHolder.btnSaveToGoogle.setOnClickListener(
+                        view -> saveToGoogleButtonClickListener.onClick(view, position));
+            }
         } else {
             viewHolder.getPicture().setVisibility(View.GONE);
             viewHolder.getNote().setText(learningUnitNotes.get(position).note);

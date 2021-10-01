@@ -222,7 +222,7 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
 
         if (null != attachment) {
             if (!attachment.exists() || !attachment.canRead()) {
-                throw new Exception("Invalid attachement");
+                throw new Exception("Invalid attachment");
             }
 
             Uri uri = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
