@@ -1,7 +1,10 @@
 package com.iu.course_organizer.ui.learning_unit.list;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -11,8 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iu.course_organizer.R;
+import com.iu.course_organizer.common.CsvExporter;
 import com.iu.course_organizer.common.Timer;
 import com.iu.course_organizer.common.utils.ActivityExtras;
+import com.iu.course_organizer.data.CourseRepository;
+import com.iu.course_organizer.data.LearningUnitRepository;
+import com.iu.course_organizer.data.LoginDataSource;
+import com.iu.course_organizer.data.LoginRepository;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
 import com.iu.course_organizer.database.model.LearningUnit;
 import com.iu.course_organizer.databinding.ActivityLearningUnitListBinding;
@@ -27,6 +35,7 @@ import java.util.Map;
 
 public class LearningUnitListActivity extends AppCombatDefaultActivity {
 
+    private static final int PERMISSION_REQUEST_CODE = 2296;
     private LearningUnitListViewModel viewModel;
     private ActivityLearningUnitListBinding binding;
     private Bundle savedInstanceState;
@@ -66,9 +75,34 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
         loadLearningUnits();
     }
 
-    protected boolean showMenuExportItem()
-    {
-        return true;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btnExport:
+                if (!checkStoragePermission()) {
+                    requestStoragePermission(PERMISSION_REQUEST_CODE);
+                } else {
+                    handleExport();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // init export
+        if (requestCode == PERMISSION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            handleExport();
+        }
+    }
+
+    @Override
+    protected int getMenuId() {
+        return R.menu.learning_unit_list_menu;
     }
 
     private void handleNewButton() {
@@ -139,6 +173,29 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
         });
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private void handleExport() {
+
+        Thread thread = new Thread(() -> {
+            try {
+                CourseOrganizerDatabase database = CourseOrganizerDatabase.getInstance(this);
+                CourseRepository courseRepository = CourseRepository.getInstance(database);
+                LearningUnitRepository learningUnitRepository =
+                        LearningUnitRepository.getInstance(database);
+                LoginRepository loginRepository =
+                        LoginRepository.getInstance(new LoginDataSource(database));
+                CsvExporter csvExporter =
+                        new CsvExporter(courseRepository, learningUnitRepository, loginRepository);
+
+                String filePath = csvExporter.writeLearningUnits();
+                showSnackBar(getResources().getString(R.string.export_succesful, filePath));
+            } catch (Exception sqlEx) {
+                showSnackBar(getResources().getString(R.string.error_export));
+                Log.e(this.getClass().getSimpleName(), sqlEx.getMessage(), sqlEx);
+            }
+        });
+        thread.start();
     }
 
     private void initLearningUnitListAdapter() {

@@ -41,4 +41,9 @@
     <string name="export_succesful">exported data to file \"%s\"</string>
     <string name="error_picture">Could not create picture</string>
     <string name="picture_successful">Added picture successfully</string>
+    <string name="import_title">import</string>
+    <string name="title_activity_import_courses">import</string>
+    <string name="choose_csv_file">Choose a file in csv format</string>
+    <string name="error_import">Could not import data</string>
+    <string name="import_successful">Successfully imported data</string>
 </resources>

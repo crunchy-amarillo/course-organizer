@@ -1,34 +1,40 @@
 package com.iu.course_organizer.ui;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION.SDK_INT;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Environment;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.iu.course_organizer.R;
-import com.iu.course_organizer.common.CsvWriter;
-import com.iu.course_organizer.data.CourseRepository;
-import com.iu.course_organizer.data.LearningUnitRepository;
 import com.iu.course_organizer.data.LoginDataSource;
 import com.iu.course_organizer.data.LoginRepository;
 import com.iu.course_organizer.data.model.LoggedInUser;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
-import com.iu.course_organizer.ui.course.list.CourseListActivity;
-import com.iu.course_organizer.ui.learning_unit.list.LearningUnitListActivity;
 import com.iu.course_organizer.ui.login.LoginActivity;
 
 import java.util.Map;
 
 public class AppCombatDefaultActivity extends AppCompatActivity {
+
     private LoginRepository loginRepository;
 
     @Override
@@ -48,7 +54,7 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.default_menu, menu);
+        getMenuInflater().inflate(getMenuId(), menu);
 
         MenuCompat.setGroupDividerEnabled(menu, true);
 
@@ -58,8 +64,6 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
                 null == user ? "" : user.getDisplayName()
         ));
 
-        menu.findItem(R.id.btnExport).setVisible(showMenuExportItem());
-
         return true;
     }
 
@@ -68,9 +72,6 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.btnLogout:
                 doLogout();
-                return true;
-            case R.id.btnExport:
-                doExport();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -119,8 +120,8 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
         Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
     }
 
-    protected boolean showMenuExportItem() {
-        return false;
+    protected int getMenuId() {
+        return R.menu.default_menu;
     }
 
     private void checkLogin() {
@@ -129,37 +130,40 @@ public class AppCombatDefaultActivity extends AppCompatActivity {
         }
     }
 
-    private void doExport() {
-        Thread thread = new Thread(() -> {
-            try {
-                CourseRepository courseRepository =
-                        CourseRepository.getInstance(CourseOrganizerDatabase.getInstance(this));
-                LearningUnitRepository learningUnitRepository = LearningUnitRepository.getInstance(
-                        CourseOrganizerDatabase.getInstance(this));
-                CsvWriter csvWriter =
-                        new CsvWriter(courseRepository, learningUnitRepository, loginRepository);
-
-                String filePath = "";
-                if (this instanceof LearningUnitListActivity) {
-                    filePath = csvWriter.writeLearningUnits();
-                }
-                if (this instanceof CourseListActivity) {
-                    filePath = csvWriter.writeCourses();
-                }
-
-                showSnackBar(getResources().getString(R.string.export_succesful, filePath));
-            } catch (Exception sqlEx) {
-                showSnackBar(getResources().getString(R.string.error_export));
-                Log.e(this.getClass().getSimpleName(), sqlEx.getMessage(), sqlEx);
-            }
-        });
-        thread.start();
-    }
-
     private void doLogout() {
         loginRepository.logout();
+        switchActivity(LoginActivity.class);
+    }
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+    protected void requestStoragePermission(int requestCode) {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(
+                        String.format("package:%s", getApplicationContext().getPackageName())));
+                startActivityForResult(intent, requestCode);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent, requestCode);
+            }
+        } else {
+            //below android 11
+            ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE},
+                    requestCode
+            );
+        }
+    }
+
+    protected boolean checkStoragePermission() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            int resultRead = ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE);
+            int resultWrite = ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE);
+            return resultRead == PackageManager.PERMISSION_GRANTED &&
+                    resultWrite == PackageManager.PERMISSION_GRANTED;
+        }
     }
 }

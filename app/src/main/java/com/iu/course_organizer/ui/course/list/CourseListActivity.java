@@ -1,7 +1,11 @@
 package com.iu.course_organizer.ui.course.list;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -12,8 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.iu.course_organizer.R;
+import com.iu.course_organizer.common.CsvExporter;
+import com.iu.course_organizer.common.CsvImporter;
 import com.iu.course_organizer.common.RecyclerViewTouchListener;
 import com.iu.course_organizer.common.utils.ActivityExtras;
+import com.iu.course_organizer.data.CourseRepository;
+import com.iu.course_organizer.data.LearningUnitRepository;
+import com.iu.course_organizer.data.LoginDataSource;
+import com.iu.course_organizer.data.LoginRepository;
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
 import com.iu.course_organizer.database.model.Course;
 import com.iu.course_organizer.databinding.ActivityCourseListBinding;
@@ -28,10 +38,15 @@ import java.util.Map;
 
 public class CourseListActivity extends AppCombatDefaultActivity {
 
+    private static final int PERMISSION_REQUEST_CODE_IMPORT = 2297;
+    private static final int PERMISSION_REQUEST_CODE_EXPORT = 2298;
+
     private CourseListViewModel viewModel;
     private ActivityCourseListBinding binding;
     private CourseListEntryAdapter entryAdapter;
     private RecyclerView recyclerView;
+
+    private static final int PICKFILE_RESULT_CODE = 42;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +75,66 @@ public class CourseListActivity extends AppCombatDefaultActivity {
         loadCourses();
     }
 
-    protected boolean showMenuExportItem()
-    {
-        return true;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btnImport:
+                if (!checkStoragePermission()) {
+                    doRequestStoragePermission(PERMISSION_REQUEST_CODE_IMPORT);
+                } else {
+                    handleImport();
+                }
+                return true;
+            case R.id.btnExport:
+                if (!checkStoragePermission()) {
+                    doRequestStoragePermission(PERMISSION_REQUEST_CODE_EXPORT);
+                } else {
+                    handleExport();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
+    @Override
+    protected int getMenuId() {
+        return R.menu.course_list_menu;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // init import
+        if (requestCode == PERMISSION_REQUEST_CODE_IMPORT && resultCode == Activity.RESULT_OK) {
+            handleImport();
+        }
+        // init export
+        else if (requestCode == PERMISSION_REQUEST_CODE_EXPORT &&
+                resultCode == Activity.RESULT_OK) {
+            handleExport();
+        }
+        // handle import result
+        else if (requestCode == PICKFILE_RESULT_CODE && resultCode == Activity.RESULT_OK) {
+            Thread thread = new Thread(() -> {
+                Uri uri = data.getData();
+                CourseOrganizerDatabase database = CourseOrganizerDatabase.getInstance(this);
+                CourseRepository courseRepository = CourseRepository.getInstance(database);
+                LoginRepository loginRepository =
+                        LoginRepository.getInstance(new LoginDataSource(database));
+                CsvImporter csvImporter = new CsvImporter(courseRepository, loginRepository);
+                try {
+                    csvImporter.writeCourses(uri);
+                    loadCourses();
+                    showSnackBar(getResources().getString(R.string.import_successful));
+                } catch (Exception e) {
+                    showSnackBar(getResources().getString(R.string.error_import));
+                }
+            });
+            thread.start();
+        }
+    }
 
     private void handleNewButton() {
         binding.btnAddCourse.setOnClickListener(view -> {
@@ -116,6 +186,41 @@ public class CourseListActivity extends AppCombatDefaultActivity {
         });
 
         itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private void doRequestStoragePermission(int requestCode) {
+        requestStoragePermission(requestCode);
+    }
+
+    private void handleImport() {
+        Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+        chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
+        chooseFile.setType("text/*");
+
+        String chooseTitle = getResources().getString(R.string.choose_csv_file);
+        startActivityForResult(Intent.createChooser(chooseFile, chooseTitle), PICKFILE_RESULT_CODE);
+    }
+
+    private void handleExport() {
+        Thread thread = new Thread(() -> {
+            try {
+                CourseOrganizerDatabase database = CourseOrganizerDatabase.getInstance(this);
+                CourseRepository courseRepository = CourseRepository.getInstance(database);
+                LearningUnitRepository learningUnitRepository =
+                        LearningUnitRepository.getInstance(database);
+                LoginRepository loginRepository =
+                        LoginRepository.getInstance(new LoginDataSource(database));
+                CsvExporter csvExporter =
+                        new CsvExporter(courseRepository, learningUnitRepository, loginRepository);
+
+                String filePath = csvExporter.writeCourses();
+                showSnackBar(getResources().getString(R.string.export_succesful, filePath));
+            } catch (Exception sqlEx) {
+                showSnackBar(getResources().getString(R.string.error_export));
+                Log.e(this.getClass().getSimpleName(), sqlEx.getMessage(), sqlEx);
+            }
+        });
+        thread.start();
     }
 
     private void initCourseListAdapter() {

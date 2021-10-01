@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:id="@+id/menuGroup1">
+        <android:item
+            android:id="@+id/menuUser"
+            android:icon="@android:drawable/ic_dialog_info"
+            android:title="@string/loggedin_user"
+            iconTint="@color/black"
+            app:showAsAction="never" />
+    </group>
+
+    <group android:id="@+id/menuGroup2">
+        <android:item
+            android:id="@+id/btnExport"
+            android:icon="@android:drawable/ic_menu_set_as"
+            android:title="@string/export"
+            iconTint="@color/black"
+            app:showAsAction="never" />
+
+        <android:item
+            android:id="@+id/btnImport"
+            android:icon="@android:drawable/ic_menu_set_as"
+            android:title="@string/import_title"
+            iconTint="@color/black"
+            app:showAsAction="never" />
+
+        <android:item
+            android:id="@+id/btnLogout"
+            android:icon="@android:drawable/ic_lock_power_off"
+            android:title="@string/logout"
+            iconTint="@color/black"
+            app:showAsAction="never" />
+    </group>
+</menu>

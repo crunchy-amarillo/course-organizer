@@ -16,12 +16,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class CsvWriter {
-    private CourseRepository courseRepository;
-    private LearningUnitRepository learningUnitRepository;
-    private LoginRepository loginRepository;
+public class CsvExporter {
+    private final CourseRepository courseRepository;
+    private final LearningUnitRepository learningUnitRepository;
+    private final LoginRepository loginRepository;
 
-    public CsvWriter(CourseRepository courseRepository,
+    public CsvExporter(CourseRepository courseRepository,
             LearningUnitRepository learningUnitRepository, LoginRepository loginRepository
     ) {
         this.courseRepository = courseRepository;
@@ -36,8 +36,8 @@ public class CsvWriter {
 
         FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        String separator = ",";
-        StringJoiner stringJoiner = new StringJoiner(separator);
+        String delimiter = CsvImporter.COMMA_DELIMITER;
+        StringJoiner stringJoiner = new StringJoiner(delimiter);
         stringJoiner.add("uid");
         stringJoiner.add("title");
         stringJoiner.add("description");
@@ -46,7 +46,7 @@ public class CsvWriter {
         bufferedWriter.write(stringJoiner.toString() + "\n");
 
         for (Course course : courses) {
-            stringJoiner = new StringJoiner(separator);
+            stringJoiner = new StringJoiner(delimiter);
             stringJoiner.add(course.uid.toString());
             stringJoiner.add(course.title);
             stringJoiner.add(course.description);

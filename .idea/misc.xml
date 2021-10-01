@@ -14,6 +14,7 @@
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/activity_add_course.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/activity_add_learning_unit.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/activity_add_learning_unit_note.xml" value="0.2015625" />
+        <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/activity_add_learning_unit_photo.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/activity_course_list.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/activity_edit_learning_unit.xml" value="0.20208333333333334" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/activity_learning_unit.xml" value="0.1" />
@@ -24,6 +25,7 @@
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/content_add_course.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/content_add_learning_unit.xml" value="0.6462311557788945" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/content_add_learning_unit_note.xml" value="0.2015625" />
+        <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/content_add_learning_unit_photo.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/content_course_list.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/content_edit_learning_unit.xml" value="0.22" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/content_learning_unit_list.xml" value="0.20572916666666666" />
@@ -38,7 +40,9 @@
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/menu.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/progressbar.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/layout/toolbar.xml" value="0.10005065856129686" />
+        <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/menu/course_list_menu.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/menu/default_menu.xml" value="0.20572916666666666" />
+        <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/menu/learning_unit_list_menu.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.221875" />
         <entry key="..\:/Users/susan/AndroidStudioProjects/course-organizer/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.221875" />
         <entry key="..\:/Users/susan/AppData/Local/Android/Sdk/platforms/android-31/data/res/drawable/ic_logout.xml" value="0.221875" />

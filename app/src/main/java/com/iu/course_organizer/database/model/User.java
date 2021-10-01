@@ -35,8 +35,8 @@ public class User {
 
     public static User[] populateData() {
         return new User[] {
-                new User("user1", "Peter", "Silie", "Abcd1234"),
-                new User("user2", "Klara", "Fall", "1234abcD")
+                new User("user1", "Peter", "Silie", "pw1"),
+                new User("user2", "Klara", "Fall", "pw2")
         };
     }
 }

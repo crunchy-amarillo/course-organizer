@@ -47,7 +47,7 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
     private RecyclerView recyclerView;
     private LearningUnitNoteRepository noteRepository;
 
-    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 23;
     private File pictureFile;
 
     @Override

@@ -41,4 +41,9 @@
     <string name="export_succesful">Die Daten wurden nach "%s" exportiert.</string>
     <string name="error_picture">Problem beim Erstellen eines Fotos.</string>
     <string name="picture_successful">Foto erfolgreich zu den Notizen hinzugefügt</string>
+    <string name="import_title">Import</string>
+    <string name="title_activity_import_courses">Import</string>
+    <string name="choose_csv_file">Wählen Sie eine CSV-Datei aus</string>
+    <string name="error_import">Die Daten konnten nicht importiert werden</string>
+    <string name="import_successful">Die Daten wurden erfolgreich importiert</string>
 </resources>
