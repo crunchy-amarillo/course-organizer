@@ -50,4 +50,5 @@
     <string name="email_choose_provider">Wähle ein E-Mail-Programm aus</string>
     <string name="email_subject_export">Dein Export aus CourseOrganizer</string>
     <string name="email_text_export">Du findest das exportierte PDF im Anhang.</string>
+    <string name="timer_running">Die Stopuhr läuft seit %d Sekunden.</string>
 </resources>

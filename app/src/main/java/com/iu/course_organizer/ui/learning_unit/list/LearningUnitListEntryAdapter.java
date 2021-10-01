@@ -29,6 +29,7 @@ public class LearningUnitListEntryAdapter
         private final TextView title;
         private final TextView description;
         private final TextView workingHours;
+        private final TextView timer;
         private final ProgressBar progressBar;
         private final Button btnStart;
         private final Button btnStop;
@@ -38,6 +39,7 @@ public class LearningUnitListEntryAdapter
             title = view.findViewById(R.id.learningUnitListTitle);
             description = view.findViewById(R.id.learningUnitListDescription);
             workingHours = view.findViewById(R.id.learningUnitListWorkingHours);
+            timer = view.findViewById(R.id.learningUnitTimer);
             progressBar = view.findViewById(R.id.progressBar);
 
             btnStart = view.findViewById(R.id.btnStartTimeTracking);
@@ -58,6 +60,10 @@ public class LearningUnitListEntryAdapter
 
         public ProgressBar getProgressBar() {
             return progressBar;
+        }
+
+        public TextView getTimer() {
+            return timer;
         }
     }
 

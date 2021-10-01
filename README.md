@@ -17,6 +17,7 @@ If you want more users, you have to adjust `User.populateData()` and reinstall t
 
 * use add button (bottom, right) to add new items
 * swipe to delete
+* tap on list view entries to show detail pages
 
 # Exports
 

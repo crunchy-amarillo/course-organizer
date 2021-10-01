@@ -50,4 +50,5 @@
     <string name="email_choose_provider">Choose your email provider</string>
     <string name="email_subject_export">Your export of CourseOrganizer</string>
     <string name="email_text_export">You will find your exported pdf as attachement.</string>
+    <string name="timer_running">Timer running since %d seconds.</string>
 </resources>

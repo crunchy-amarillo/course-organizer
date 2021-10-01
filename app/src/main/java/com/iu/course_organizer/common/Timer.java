@@ -24,6 +24,12 @@ public class Timer {
         start = LocalDateTime.now();
     }
 
+    public long getSeconds() {
+        Duration dur = Duration.between(start, LocalDateTime.now());
+        long millis = dur.toMillis();
+        return (0 < millis) ? Math.round((float) millis / 1000) : 0;
+    }
+
     public int stop() {
         Duration dur = Duration.between(start, LocalDateTime.now());
         int minutes = (int) dur.toMinutes();

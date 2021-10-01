@@ -3,9 +3,11 @@ package com.iu.course_organizer.ui.learning_unit.list;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.CsvExporter;
-import com.iu.course_organizer.common.PdfWriter;
 import com.iu.course_organizer.common.Timer;
 import com.iu.course_organizer.common.utils.ActivityExtras;
 import com.iu.course_organizer.data.CourseRepository;
@@ -29,7 +30,6 @@ import com.iu.course_organizer.ui.AppCombatDefaultActivity;
 import com.iu.course_organizer.ui.learning_unit.crud.AddLearningUnitActivity;
 import com.iu.course_organizer.ui.learning_unit.crud.EditLearningUnitActivity;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +44,8 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
     private Bundle savedInstanceState;
     private LearningUnitListEntryAdapter entryAdapter;
     private RecyclerView recyclerView;
+    private Handler timerHandler = new Handler();
+    private Runnable timerRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,14 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        if (null != timerRunnable) {
+            timerHandler.removeCallbacks(timerRunnable);
+        }
+    }
+
+    @Override
     protected int getMenuId() {
         return R.menu.learning_unit_list_menu;
     }
@@ -134,10 +144,25 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
             View containingItemView = recyclerView.findContainingItemView(view);
             containingItemView.findViewById(R.id.btnStartTimeTracking).setVisibility(View.GONE);
             containingItemView.findViewById(R.id.btnStopTimeTracking).setVisibility(View.VISIBLE);
+            TextView timerView = containingItemView.findViewById(R.id.learningUnitTimer);
+            timerView.setVisibility(View.VISIBLE);
             Timer.getInstance(position).start();
             showSnackBar(getResources().getString(R.string.start_recording));
+            timerRunnable = () -> {
+                String timerString = getResources().getString(R.string.timer_running,
+                        Timer.getInstance(position).getSeconds()
+                );
+                timerView.setText(timerString);
+                startTimer(timerRunnable);
+            };
+            startTimer(timerRunnable);
         });
     }
+
+    private void startTimer(Runnable runnable) {
+        timerHandler.postDelayed(runnable, 1000);
+    }
+
 
     private void handleOnStopButtonClick() {
         entryAdapter.setStopButtonListener((view, position) -> {
@@ -145,11 +170,15 @@ public class LearningUnitListActivity extends AppCombatDefaultActivity {
             binding.includedLayoutLearningUnits.loading.setVisibility(View.VISIBLE);
             containingItemView.findViewById(R.id.btnStartTimeTracking).setVisibility(View.VISIBLE);
             containingItemView.findViewById(R.id.btnStopTimeTracking).setVisibility(View.GONE);
+            containingItemView.findViewById(R.id.learningUnitTimer).setVisibility(View.GONE);
             int minutes = Timer.getInstance(position).stop();
             LearningUnit learningUnit = entryAdapter.getByPosition(position);
             viewModel.increaseTimeTracking(learningUnit.uid, minutes);
             showSnackBar(getResources().getString(R.string.stop_recording));
             loadLearningUnits();
+            if (null != timerRunnable) {
+                timerHandler.removeCallbacks(timerRunnable);
+            }
         });
     }
 
