@@ -1,15 +1,19 @@
 package com.iu.course_organizer.ui.learning_unit.notes;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iu.course_organizer.R;
+import com.iu.course_organizer.common.utils.StringUtils;
 import com.iu.course_organizer.database.model.LearningUnitNote;
 
 import java.util.List;
@@ -21,14 +25,20 @@ public class LearningUnitNoteListEntryAdapter
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView note;
+        private final ImageView picture;
 
         public ViewHolder(View view) {
             super(view);
             note = view.findViewById(R.id.learningUnitNote);
+            picture = view.findViewById(R.id.learningUnitPicture);
         }
 
         public TextView getNote() {
             return note;
+        }
+
+        public ImageView getPicture() {
+            return picture;
         }
     }
 
@@ -55,7 +65,16 @@ public class LearningUnitNoteListEntryAdapter
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
-        viewHolder.getNote().setText(learningUnitNotes.get(position).note);
+        String picturePath = learningUnitNotes.get(position).picturePath;
+        if (StringUtils.isNotEmpty(picturePath)) {
+            viewHolder.getNote().setVisibility(View.GONE);
+            Bitmap picture = BitmapFactory.decodeFile(picturePath);
+            viewHolder.getPicture().setImageBitmap(picture);
+            viewHolder.getPicture().setMaxHeight(100);
+        } else {
+            viewHolder.getPicture().setVisibility(View.GONE);
+            viewHolder.getNote().setText(learningUnitNotes.get(position).note);
+        }
     }
 
     public LearningUnitNote getByPosition(int position) {

@@ -1,6 +1,7 @@
 package com.iu.course_organizer.data;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.iu.course_organizer.database.CourseOrganizerDatabase;
 import com.iu.course_organizer.database.model.LearningUnitNote;
@@ -25,10 +26,10 @@ public class LearningUnitNoteRepository {
         this.database = database;
     }
 
-    public Result<Void> add(String note, Integer learningUnitId
+    public Result<Void> add(@NonNull String note, @Nullable String picturePath, Integer learningUnitId
     ) {
         try {
-            LearningUnitNote learningUnitNote = new LearningUnitNote(note, learningUnitId);
+            LearningUnitNote learningUnitNote = new LearningUnitNote(note, picturePath, learningUnitId);
             database.learningUnitNoteDao().insert(learningUnitNote);
             return new Result.Success<>(true);
         } catch (Exception e) {

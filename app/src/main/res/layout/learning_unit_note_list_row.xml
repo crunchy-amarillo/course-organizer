@@ -14,11 +14,22 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/learningUnitNote"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Note"
-            android:textAppearance="?android:attr/textAppearanceListItem" />
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/learningUnitNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/note"
+                android:textAppearance="?android:attr/textAppearanceListItem" />
+
+            <ImageView
+                android:id="@+id/learningUnitPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:textAppearance="?android:attr/textAppearanceListItem" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

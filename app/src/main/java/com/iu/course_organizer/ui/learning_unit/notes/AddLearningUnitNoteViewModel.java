@@ -31,7 +31,7 @@ public class AddLearningUnitNoteViewModel extends ViewModel {
 
     public void add(String note, Integer learningUnitId) {
         Thread thread = new Thread(() -> {
-            Result<Void> result = noteRepository.add(note, learningUnitId);
+            Result<Void> result = noteRepository.add(note, null, learningUnitId);
             if (result instanceof Result.Success) {
                 addResult.postValue(new DefaultResult<>(true));
             } else {

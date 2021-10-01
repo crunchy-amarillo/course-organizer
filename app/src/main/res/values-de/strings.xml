@@ -39,4 +39,6 @@
     <string name="export">Export</string>
     <string name="error_export">"Ein Fehler ist aufgetreten - die Daten konnten nicht exportiert werden."</string>
     <string name="export_succesful">Die Daten wurden nach "%s" exportiert.</string>
+    <string name="error_picture">Problem beim Erstellen eines Fotos.</string>
+    <string name="picture_successful">Foto erfolgreich zu den Notizen hinzugefügt</string>
 </resources>

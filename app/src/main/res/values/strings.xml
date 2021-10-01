@@ -39,4 +39,6 @@
     <string name="export">export</string>
     <string name="error_export">"an error occured - could not export data "</string>
     <string name="export_succesful">exported data to file \"%s\"</string>
+    <string name="error_picture">Could not create picture</string>
+    <string name="picture_successful">Added picture successfully</string>
 </resources>

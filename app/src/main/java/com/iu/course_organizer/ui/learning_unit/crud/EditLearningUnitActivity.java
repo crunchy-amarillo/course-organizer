@@ -1,16 +1,23 @@
 package com.iu.course_organizer.ui.learning_unit.crud;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.iu.course_organizer.BuildConfig;
 import com.iu.course_organizer.R;
 import com.iu.course_organizer.common.utils.ActivityExtras;
 import com.iu.course_organizer.common.utils.StringUtils;
@@ -23,17 +30,25 @@ import com.iu.course_organizer.databinding.ContentEditLearningUnitBinding;
 import com.iu.course_organizer.ui.learning_unit.notes.AddLearningUnitNoteActivity;
 import com.iu.course_organizer.ui.learning_unit.notes.LearningUnitNoteListEntryAdapter;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class EditLearningUnitActivity extends LearningUnitActivity {
 
     private ActivityEditLearningUnitBinding binding;
     private LearningUnitNoteListEntryAdapter entryAdapter;
     private RecyclerView recyclerView;
-    LearningUnitNoteRepository noteRepository;
+    private LearningUnitNoteRepository noteRepository;
+
+    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    private File pictureFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +58,19 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbarWrapper.toolbar);
-         noteRepository =
+        noteRepository =
                 LearningUnitNoteRepository.getInstance(CourseOrganizerDatabase.getInstance(this));
 
         observeFormInputs();
         observeEditResult();
         initFormData();
         initFormInputChangeListener();
-        handleNewButton();
         handleSubmitButton();
         handleCancelButton();
         handleTabs();
 
+        handleNewNoteButton();
+        handleNewPictureButton();
         initLearningUnitNoteListAdapter();
         loadLearningUnitNotes();
         observeLearningUnitNoteList();
@@ -113,7 +129,7 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
         });
     }
 
-    private void handleNewButton() {
+    private void handleNewNoteButton() {
         Map<String, String> extras = new HashMap<>();
         extras.put(ActivityExtras.LEARNING_UNIT_ID,
                 getActivityExtra(savedInstanceState, ActivityExtras.LEARNING_UNIT_ID)
@@ -124,6 +140,81 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
         });
     }
 
+    private void handleNewPictureButton() {
+        Map<String, String> extras = new HashMap<>();
+        extras.put(ActivityExtras.LEARNING_UNIT_ID,
+                getActivityExtra(savedInstanceState, ActivityExtras.LEARNING_UNIT_ID)
+        );
+
+        binding.includedForm.btnAddPicture.setOnClickListener(view -> {
+            launchCamera(view);
+        });
+    }
+
+    /**
+     * @see https://guides.codepath.com/android/Accessing-the-Camera-and-Stored-Media
+     */
+    protected void launchCamera(View view) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            pictureFile = getPictureFileUri();
+
+            Uri fileProvider =
+                    FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                            BuildConfig.APPLICATION_ID + ".provider", pictureFile
+                    );
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+            }
+
+        } catch (IOException e) {
+            showSnackBar(getResources().getString(R.string.error_picture));
+        }
+    }
+
+    protected File getPictureFileUri() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fileName = "CourseOrganizer_Image_" + timeStamp + ".jpg";
+
+        String appSubDirector = getResources().getString(R.string.app_name);
+        File mediaStorageDir =
+                new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), appSubDirector);
+
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+            throw new IOException("Could not create picture");
+        }
+
+        return new File(mediaStorageDir.getPath() + File.separator + fileName);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // handle taken picture
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                Thread thread = new Thread(() -> {
+                    Integer learningUnitId = Integer.valueOf(
+                            getActivityExtra(savedInstanceState, ActivityExtras.LEARNING_UNIT_ID));
+                    Result<Void> result =
+                            noteRepository.add("uploaded picture", pictureFile.getAbsolutePath(), learningUnitId);
+                    if (result instanceof Result.Success) {
+                        loadLearningUnitNotes();
+                        showSnackBar(getResources().getString(R.string.picture_successful));
+                    } else {
+                        showSnackBar(getResources().getString(R.string.error_picture));
+                    }
+                });
+                thread.start();
+            } else {
+                showSnackBar(getResources().getString(R.string.error_picture));
+            }
+        }
+    }
 
     private void handleSubmitButton() {
         ContentEditLearningUnitBinding form = binding.includedForm;
@@ -161,6 +252,7 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
                 findViewById(R.id.tab1Wrapper).setVisibility(View.VISIBLE);
                 findViewById(R.id.tab2Wrapper).setVisibility(View.GONE);
                 findViewById(R.id.btnAddNote).setVisibility(View.GONE);
+                findViewById(R.id.btnAddPicture).setVisibility(View.GONE);
             } else if (view.getId() == tab2.getId()) {
                 tab1.setActivated(false);
                 tab1.setTextColor(getResources().getColor(R.color.muted, getTheme()));
@@ -169,6 +261,10 @@ public class EditLearningUnitActivity extends LearningUnitActivity {
                 findViewById(R.id.tab1Wrapper).setVisibility(View.GONE);
                 findViewById(R.id.tab2Wrapper).setVisibility(View.VISIBLE);
                 findViewById(R.id.btnAddNote).setVisibility(View.VISIBLE);
+
+                if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                    findViewById(R.id.btnAddPicture).setVisibility(View.VISIBLE);
+                }
             }
         };
         form.btnTab1.setOnClickListener(onClickListener);
