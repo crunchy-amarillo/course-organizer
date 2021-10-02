@@ -1,7 +1,5 @@
 package com.iu.course_organizer.common;
 
-import android.os.Environment;
-
 import com.iu.course_organizer.data.CourseRepository;
 import com.iu.course_organizer.data.LearningUnitRepository;
 import com.iu.course_organizer.data.LoginRepository;
@@ -12,7 +10,6 @@ import com.iu.course_organizer.database.model.LearningUnit;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 import java.util.StringJoiner;
 

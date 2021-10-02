@@ -57,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
     private void checkIfUserIsLoggedIn() {
         if (loginRepository.isLoggedIn()) {
             switchToCourseList();
-            finish();
         }
     }
 
